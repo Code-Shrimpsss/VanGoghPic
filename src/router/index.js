@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MainView from '../views/MainView.vue'
-
+import FavoritesPageView from '../views/FavoritesPage.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,7 +31,20 @@ const routes = [
     path: '/my',
     name: 'my',
     component: () => import(/* webpackChunkName: "phone" */ '../views/MyView.vue')
-  }
+  },
+  {
+    path: '/favorites',
+    name: 'favorites',
+    component: () => import(/* webpackChunkName: "favorites" */ '../views/Favorites.vue'),
+  },
+  {
+    // 搜索结果页
+    // path: '/favorites/:id',
+    path: '/favorites/page',
+    component: FavoritesPageView,
+    name: 'favoritespage',
+    props: true
+  },
 ]
 
 const router = new VueRouter({

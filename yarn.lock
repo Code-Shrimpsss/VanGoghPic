@@ -1012,6 +1012,11 @@
   "resolved" "https://registry.npmmirror.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz"
   "version" "3.4.0"
 
+"@fancyapps/ui@^4.0.26":
+  "integrity" "sha512-BcqK/lOMQ0IbR7DUcNK6olUCaOWlEqW7Oi3qdltur87zs6doFnno5fyKv9cDMRnuH4IxudU7Cz1zRzSUfsDWJA=="
+  "resolved" "https://registry.npmmirror.com/@fancyapps/ui/-/ui-4.0.26.tgz"
+  "version" "4.0.26"
+
 "@hapi/hoek@^9.0.0":
   "integrity" "sha512-gfta+H8aziZsm8pZa0vj04KO6biEiisppNgA1kbJvFrrWu9Vm7eaUEy76DIxsuTaWvti5fkJVhllWc6ZTE+Mdw=="
   "resolved" "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.1.tgz"
@@ -6396,6 +6401,11 @@
   "integrity" "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw="
   "resolved" "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   "version" "1.1.2"
+
+"vue-cookies@^1.8.0":
+  "integrity" "sha512-5nxAwW4kIS6uP0G9UnWcmSj2NlFpV1wkvAAwGgkWqyPDVCP1IEzFZfg7YUBLiYowZ/cFnxaXqS1nWPIBwfXGRw=="
+  "resolved" "https://registry.npmmirror.com/vue-cookies/-/vue-cookies-1.8.0.tgz"
+  "version" "1.8.0"
 
 "vue-hot-reload-api@^2.3.0":
   "integrity" "sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog=="

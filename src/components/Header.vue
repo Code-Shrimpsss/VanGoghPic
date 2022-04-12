@@ -1,50 +1,39 @@
 <template>
   <div class="headbox">
     <!-- 左侧Logo以及黑夜白天 -->
+
     <div class="leftHead">
-      <i id="dicon" class="el-icon-moon"></i>
+      <!-- <i id="dicon" class="el-icon-moon"></i> -->
+
       <h3 class="lefttxt">Van GoghPic</h3>
     </div>
+
     <!-- 主要导航功能块 -->
+
     <el-menu
       :default-active="activeIndex"
       class="el-menu"
       mode="horizontal"
-      :background-color="achange"
+      background-color="rgba(255, 255, 255, 0.00)"
       :router="true"
-      text-color="#b6ebff"
-      active-text-color="#0353ff"
+      text-color="#fff"
+      active-text-color="#ffd04b"
     >
-      <el-menu-item index="/">主页</el-menu-item>
-      <el-menu-item index="/about">类型</el-menu-item>
-      <el-menu-item index="/phone">画册</el-menu-item>
-    </el-menu>
-    <div class="demo-type">
-      <!-- <el-switch
-        id="heib"
-        v-model="value"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
-        active-icon-class="el-icon-sunrise-1"
-        inactive-icon-class="el-icon-moon-night">
-      </el-switch> -->
-      <!-- <el-popover
-        placement="top-bottom"
-        trigger="hover"
-        title="标题"
-        width="40"
-        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+      <el-menu-item class="el-icon-s-home" index="/">主页</el-menu-item>
+      <el-menu-item class="el-icon-menu" index="/about">类型</el-menu-item>
+      <el-menu-item class="el-icon-s-management" index="/phone"
+        >画册</el-menu-item
       >
-        >
-        <a href="/phone" slot="reference"
-          ><i class="el-icon-takeaway-box"></i
-        ></a>
-      </el-popover> -->
-      <a href="/phone"><i class="el-icon-takeaway-box"></i></a>
-      <div class="befoBox" v-if="username">
+    </el-menu>
+
+    <div class="demo-type">
+      <a href="/favorites"><i class="el-icon-takeaway-box"></i></a>
+
+      <!-- 登录成功的头像链接 -->
+
+      <div class="befoBox" v-if="username && token">
         <a href="/My">
           <el-avatar
-            @click="dialogVisible = true"
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
             @error="errorHandler"
           >
@@ -54,6 +43,9 @@
           </el-avatar>
         </a>
       </div>
+
+      <!-- 未登录则进行注册或登录 -->
+
       <div class="befoBox" v-else @click="dialogVisible = true">
         <el-avatar @error="errorHandler">
           <img
@@ -63,178 +55,724 @@
       </div>
 
       <!-- 登录页面信息 -->
+
       <el-dialog
         class="Edialog"
-        title="账号注册"
         :visible.sync="dialogVisible"
-        width="50%"
         :modal-append-to-body="false"
+        :show-close="false"
       >
-        <el-form
-          :model="ruleForm"
-          status-icon
-          :rules="rules"
-          ref="ruleForm"
-          label-width="100px"
-          class="demo-ruleForm"
+        <div
+          class="container"
+          :class="{ active: Infoclass == true ? 'active' : '' }"
         >
-          <el-form-item label="账号" prop="info">
-            <el-input
-              type="text"
-              v-model="ruleForm.info"
-              autocomplete="off"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="pass">
-            <el-input
-              type="password"
-              v-model="ruleForm.pass"
-              autocomplete="off"
-              :show-password="true"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="确认密码" prop="checkPass">
-            <el-input
-              type="password"
-              v-model="ruleForm.checkPass"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="手机号" prop="phoneNum">
-            <el-input
-              type="text"
-              v-model="ruleForm.phoneNum"
-              autocomplete="off"
-              maxlength="11"
-              show-word-limit
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')"
-              >提交</el-button
-            >
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
+          <!-- register -->
+
+          <div class="form-container sign-up-container">
+            <div class="form">
+              <h2>注册</h2>
+
+              <el-input
+                class="el-input user"
+                type="text"
+                placeholder="输入您的用户名"
+                v-model="username"
+                maxlength="20"
+                minlength="5"
+                show-word-limit
+              >
+              </el-input>
+
+              <span v-show="error_name" class="el-icon-warning">{{
+                error_name_message
+              }}</span>
+
+              <el-input
+                class="el-input password"
+                type="password"
+                placeholder="输入您的密码"
+                v-model="password"
+                :show-password="true"
+              >
+              </el-input>
+
+              <span v-show="error_password" class="el-icon-warning"
+                >请输入8-20位的密码</span
+              >
+              <el-input
+                class="el-input password2"
+                type="password2"
+                placeholder="输入您的密码"
+                v-model="password2"
+                :show-password="true"
+              >
+              </el-input>
+
+              <span v-show="error_check_password" class="el-icon-warning"
+                >两次输入的密码不一致</span
+              >
+
+              <el-input
+                class="el-input phone"
+                type="text"
+                placeholder="输入您的电话"
+                v-model="phone"
+                maxlength="11"
+                show-word-limit
+              >
+              </el-input>
+
+              <span v-show="error_phone" class="el-icon-warning">{{
+                error_phone_message
+              }}</span>
+
+              <div class="codePicBox">
+                <el-input
+                  class="el-input codepic"
+                  type="text"
+                  placeholder="输入验证码"
+                  v-model="image_code"
+                >
+                </el-input>
+
+                <img
+                  :src="image_code_url"
+                  @click="generate_image_code"
+                  alt="图形验证码"
+                  class="pic_code"
+                />
+
+                <span v-show="error_image_code" class="el-icon-warning">{{
+                  error_image_code_message
+                }}</span>
+              </div>
+
+              <div class="codePicBox">
+                <el-input
+                  class="el-input message"
+                  type="text"
+                  placeholder="输入短信验证码"
+                  v-model="sms_code"
+                >
+                </el-input>
+
+                <button @click="send_sms_code" class="get_msg_code">
+                  {{ sms_code_tip }}
+                </button>
+              </div>
+              <span class="el-icon-warning" v-show="error_sms_code">{{
+                error_sms_code_message
+              }}</span>
+
+              <button class="signUp" @click="on_submit()" :plain="true">
+                注册
+              </button>
+            </div>
+          </div>
+
+          <!-- login -->
+
+          <div class="form-container sign-in-container">
+            <div class="form">
+              <h2>登录</h2>
+
+              <el-input
+                class="el-input username"
+                type="text"
+                placeholder="输入您的用户名"
+                v-model="username"
+                @blur="check_username_login"
+              >
+              </el-input>
+              <div class="el-icon-warning" v-show="error_username" v-cloak>
+                请填写用户名或手机号
+              </div>
+              <el-input
+                class="el-input password"
+                type="password"
+                placeholder="输入您的密码"
+                :show-password="true"
+                v-model="password"
+                @blur="check_pwd_login"
+              >
+              </el-input>
+              <div class="el-icon-warning" v-show="error_pwd" v-cloak>
+                {{ error_pwd_message }}
+              </div>
+              <a href="#" class="forget-password">forget your password</a>
+              <button class="signIn" @click="on_submit_login()" :plain="true">
+                登录
+              </button>
+            </div>
+          </div>
+
+          <!-- overlay container -->
+
+          <div class="overlay_container">
+            <div class="overlay">
+              <!-- overlay left -->
+
+              <div class="overlay_panel overlay_left_container">
+                <h2>welcome back!</h2>
+                <p>Continue to contribute your picture book</p>
+
+                <button id="sign-in" @click="infoLogin()">登录</button>
+              </div>
+
+              <!-- overlay right -->
+
+              <div class="overlay_panel overlay_right_container">
+                <h2>hello collectors!</h2>
+
+                <p>Looking forward to your joining this picture world</p>
+
+                <button id="sign-up" @click="infoRegister()">注册</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </el-dialog>
     </div>
   </div>
 </template>
 
+
+
 <script>
-var checkinfo = (rule, value, callback) => {
-  if (!value) {
-    return callback(new Error("账号不能为空"));
-  }
-  setTimeout(() => {
-    if (value.length < 6) {
-      callback(new Error("长度必须大于6"));
-    } else {
-      if (value.length > 11) {
-        callback(new Error("长度必须小于11"));
-      } else {
-        callback();
-      }
-    }
-  }, 1000);
-};
-var validatePass = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请输入密码"));
-  } else {
-    if (this.ruleForm.checkPass !== "") {
-      this.$refs.ruleForm.validateField("checkPass");
-    }
-    callback();
-  }
-};
-var validatePass2 = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请再次输入密码"));
-  } else if (value !== this.ruleForm.pass) {
-    callback(new Error("两次输入密码不一致!"));
-  } else {
-    callback();
-  }
-};
-var checkNum = (rule, value, callback) => {
-  if (value === "") {
-    callback(new Error("请输入手机号"));
-  } else if (value !== this.ruleForm.phoneNum) {
-    callback(new Error("两次输入密码不一致!"));
-  } else {
-    callback();
-  }
-};
+import axios from "axios";
+import host from "@/js/host";
+
 export default {
   data() {
     return {
-      value: true,
-      activeIndex: "1",
-      activeIndex2: "1",
-      achange: "#fff",
-      dialogVisible: false,
+      host: host,
+      activeIndex: "1", // 头部页面默认下标
+      dialogVisible: false, // 显示登录注册框
+      Infoclass: false, // 登录注册框切换
+      // 登录注册共用
+      token: "",
       username: "",
-      ruleForm: {
-        info: "",
-        pass: "",
-        checkPass: "",
-        phoneNum: "",
-      },
-      rules: {
-        pass: [{ validator: validatePass, trigger: "blur" }],
-        checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        info: [{ validator: checkinfo, trigger: "blur" }],
-        phoneNum: [{ validator: checkNum, trigger: "blur" }],
-      },
+      password: "",
+
+      // 注册
+      password2: "",
+      phone: "",
+      codepic: "", // 图形验证码
+      sms_code: "", // 短信验证码
+      sms_code_tip: "获取短信验证码",
+      image_code: "",
+      image_code_id: "",
+      image_code_url: "",
+      error_name: false,
+      error_password: false,
+      error_check_password: false,
+      error_phone: false,
+      error_sms_code: false,
+      error_name_message: "",
+      error_phone_message: "请输入手机号码",
+      error_sms_code_message: "",
+      error_image_code: "",
+      error_image_code_message: "",
+
+      // 登录
+      error_username: false,
+      error_pwd: false,
+      error_pwd_message: "请填写密码",
+      remember: false,
     };
+  },
+  mounted() {
+    // 向服务器获取图片验证码
+
+    this.generate_image_code();
+  },
+  created() {
+    // console.log(this.$cookies);
+    // this.username = this.$cookies.get("username");
+    // this.token = this.$cookies.get("token");
   },
   methods: {
     errorHandler() {
       return true;
     },
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
-          done();
-        })
-        .catch((_) => {});
+    // 切换清空方法
+    infoLogin() {
+      this.Infoclass = false;
+      (this.username = ""),
+        (this.password = ""),
+        (this.password2 = ""),
+        (this.phone = ""),
+        (this.codepic = ""), // 图形验证码
+        (this.message = ""), // 短信验证码
+        (this.error_name = false),
+        (this.error_password = false),
+        (this.error_check_password = false),
+        (this.error_phone = false),
+        (this.sms_code = ""),
+        (this.image_code = ""),
+        (this.error_sms_code = false);
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        console.log(valid);
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+    infoRegister() {
+      this.Infoclass = true;
+      this.username = "";
+      this.password = "";
+    },
+
+    // 获取cookie
+    getCookie(name) {
+      var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+      return r ? r[1] : undefined;
+    },
+
+    // 提取地址栏中的查询字符串
+    get_query_string(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) {
+        return decodeURI(r[2]);
+      }
+      return null;
+    },
+    // 生成uuid
+
+    generateUUID: function () {
+      var d = new Date().getTime();
+
+      if (window.performance && typeof window.performance.now === "function") {
+        d += performance.now(); //use high-precision timer if available
+      }
+
+      var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+
+        function (c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+
+          d = Math.floor(d / 16);
+
+          return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
         }
-      });
+      );
+
+      return uuid;
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+
+    // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
+    generate_image_code: function () {
+      // 生成一个编号 : 严格一点的使用uuid保证编号唯一， 不是很严谨的情况下，也可以使用时间戳
+
+      this.image_code_id = this.generateUUID();
+
+      // 设置页面中图片验证码img标签的src属性
+
+      this.image_code_url =
+        this.host + "/image_codes/" + this.image_code_id + "/";
+    },
+
+    // 检查用户名
+    check_username: function () {
+      var re = /^[a-zA-Z0-9_-]{5,20}$/;
+
+      var re2 = /^[0-9]+$/;
+
+      if (re.test(this.username) && !re2.test(this.username)) {
+        this.error_name = false;
+      } else {
+        this.error_name_message = "请输入5-20个字符的用户名且不能为纯数字";
+
+        this.error_name = true;
+      }
+
+      // 检查重名
+
+      if (this.error_name == false) {
+        var url = this.host + "/usernames/" + this.username + "/count/";
+
+        axios
+
+          .get(url, {
+            responseType: "json",
+
+            withCredentials: true,
+          })
+
+          .then((response) => {
+            console.log(response);
+
+            console.log(response.data);
+
+            if (response.data.count > 0) {
+              this.error_name_message = "用户名已存在";
+
+              this.error_name = true;
+            } else {
+              this.error_name = false;
+            }
+          })
+
+          .catch((error) => {
+            console.log(error.response);
+          });
+      }
+    },
+    check_pwd() {
+      var len = this.password.length;
+      if (len < 8 || len > 20) {
+        this.error_password = true;
+      } else {
+        this.error_password = false;
+      }
+    },
+
+    check_cpwd() {
+      if (this.password != this.password2) {
+        this.error_check_password = true;
+      } else {
+        this.error_check_password = false;
+      }
+    },
+
+    // 检查手机号
+
+    check_phone() {
+      var re = /^1[345789]\d{9}$/;
+      if (re.test(this.phone)) {
+        this.error_phone = false;
+      } else {
+        this.error_phone_message = "您输入的手机号格式不正确";
+        this.error_phone = true;
+      }
+
+      if (this.error_phone == false) {
+        var url = this.host + "/mobiles/" + this.phone + "/count/";
+
+        axios
+          .get(url, {
+            responseType: "json",
+            withCredentials: true,
+          })
+          .then((response) => {
+            if (response.data.count > 0) {
+              this.error_phone_message = "手机号已存在";
+              this.error_phone = true;
+            } else {
+              this.error_phone = false;
+              console.log(321);
+            }
+          })
+
+          .catch((error) => {
+            console.log(error.response);
+          });
+      }
+    },
+
+    // 检查图片验证码
+
+    check_image_code() {
+      if (!this.image_code) {
+        this.error_image_code_message = "请填写图片验证码";
+        this.error_image_code = true;
+      } else {
+        this.error_image_code = false;
+      }
+    },
+
+    check_sms_code() {
+      if (!this.sms_code) {
+        this.error_sms_code_message = "请填写短信验证码";
+        this.error_sms_code = true;
+      } else {
+        this.error_sms_code = false;
+      }
+    },
+
+    // 发送手机短信验证码
+    send_sms_code() {
+      if (this.sending_flag == true) {
+        return;
+      }
+      this.sending_flag = true;
+      // 校验参数，保证输入框有数据填写
+      this.check_phone();
+
+      if (this.error_phone == true) {
+        this.sending_flag = false;
+        return;
+      }
+
+      // 向后端接口发送请求，让后端发送短信验证码
+
+      var url =
+        this.host +
+        "/sms_codes/" +
+        this.phone +
+        "/" +
+        "?image_code=" +
+        this.image_code +
+        "&image_code_id=" +
+        this.image_code_id;
+
+      axios
+        .get(url, {
+          responseType: "json",
+          withCredentials: true,
+        })
+
+        .then((response) => {
+          console.log(response);
+          if (response.data.code == 0) {
+            console.log("duanxin ok");
+            // 表示后端发送短信成功
+            // 倒计时60秒，60秒后允许用户再次点击发送短信验证码的按钮
+            var num = 60;
+            // 设置一个计时器
+            var t = setInterval(
+              () => {
+                if (num == 1) {
+                  // 如果计时器到最后, 清除计时器对象
+                  clearInterval(t);
+                  // 将点击获取验证码的按钮展示的文本回复成原始文本
+                  this.sms_code_tip = "获取短信验证码";
+                  // 将点击按钮的onclick事件函数恢复回去
+                  this.sending_flag = false;
+                } else {
+                  num -= 1;
+                  // 展示倒计时信息
+                  this.sms_code_tip = num + "秒";
+                }
+              },
+              1000,
+              60
+            );
+          } else {
+            console.log("duanxin error");
+            this.error_sms_code_message = response.data.errmsg;
+            this.error_sms_code = true;
+          }
+        })
+
+        .catch((error) => {
+          if (error.response.status == 400) {
+            this.error_sms_code_message = error.response.data.message;
+            this.error_sms_code = true;
+          } else {
+            console.log(error.response.data);
+          }
+          this.sending_flag = false;
+        });
+    },
+
+    // 注册
+
+    on_submit() {
+      this.check_username();
+      this.check_pwd();
+      this.check_cpwd();
+      this.check_phone();
+      this.check_sms_code();
+      // 点击注册按钮之后, 发送请求 (下面的代码是通过请求体传参的)
+      if (
+        this.error_name == false &&
+        this.error_password == false &&
+        this.error_check_password == false &&
+        this.error_phone == false &&
+        this.error_sms_code == false
+      ) {
+        axios
+          .post(
+            this.host + "/register/",
+            {
+              username: this.username,
+              password: this.password,
+              password2: this.password2,
+              mobile: this.phone,
+              sms_code: this.sms_code,
+            },
+            {
+              responseType: "json",
+
+              withCredentials: true,
+            }
+          )
+
+          .then((response) => {
+            if (response.data.code == 0) {
+              this.$message("这是一条消息提示");
+              location.href = "/";
+            }
+
+            if (response.data.code == 400) {
+              alert(response.data.errmsg);
+            }
+          })
+
+          .catch((error) => {
+            if (error.response.code == 400) {
+              if ("non_field_errors" in error) {
+                this.error_sms_code_message = error.response;
+              } else {
+                this.error_sms_code_message = "数据有误";
+              }
+              this.error_sms_code = true;
+            } else {
+              console.log(error);
+            }
+          });
+      }
+    },
+
+    // --- 登录
+    // 检查数据
+    check_username_login: function () {
+      if (!this.username) {
+        this.error_username = true;
+      } else {
+        this.error_username = false;
+      }
+    },
+    check_pwd_login: function () {
+      if (!this.password) {
+        this.error_pwd_message = "请填写密码";
+        this.error_pwd = true;
+      } else {
+        this.error_pwd = false;
+      }
+    },
+    // 表单提交
+    on_submit_login: function () {
+      this.check_username();
+      this.check_pwd();
+
+      if (this.error_username == false && this.error_pwd == false) {
+        axios
+          .post(
+            this.host + "/login/",
+            {
+              username: this.username,
+              password: this.password,
+              remembered: this.remember,
+            },
+            {
+              responseType: "json",
+              // 发送请求的时候, 携带上cookie
+              withCredentials: true,
+              // crossDomain: true
+            }
+          )
+          .then((response) => {
+            if (response.data.code == 0) {
+              // 跳转页面
+              var return_url = this.get_query_string("next");
+              if (!return_url) {
+                console.log(response);
+                // this.$cookies.set(
+                //   "token",
+                //   response.data.result.token,
+                //   "Shrimps"
+                // );
+                this.$cookies.set(
+                  "username",
+                  response.data.username
+                );
+                this.$message({
+                  message: "登录成功 (●'◡'●) 欢迎回家",
+                  type: "success",
+                });
+
+                return_url = "/";
+              }
+              // location.href = return_url;
+            } else if (response.data.code == 400) {
+              this.error_pwd_message = "用户名或密码错误";
+              this.error_pwd = true;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error.response.status == 400) {
+              this.error_pwd_message = "用户名或密码错误";
+            } else {
+              this.error_pwd_message = "服务器错误";
+            }
+            this.error_pwd = true;
+          });
+      }
     },
   },
 };
 </script>
+
 <style lang="less">
 * {
   margin: 0;
+
   padding: 0;
+
+  // box-sizing: border-box;
 }
+
+ul li {
+  width: 100px;
+  text-decoration: none;
+  list-style: none;
+  color: #fff;
+}
+ul {
+  display: flex;
+}
+
 @media screen and (max-width: 400px) {
   .headbox {
     padding: 0 0px;
+
     display: flex;
+
     justify-content: space-evenly;
   }
 }
-.el-dialog__body {
-  padding: 0px;
+
+.pic_code {
+  width: 40%;
 }
+
+.el-icon-warning {
+  color: red;
+}
+
+#warnings {
+  text-align: left;
+
+  color: #ff4b2b;
+}
+
+.get_msg_code {
+  width: 6.25rem;
+
+  height: 38px;
+
+  padding: 0;
+
+  border: 1px solid #c6c6c6;
+
+  color: #333;
+
+  background-color: #fff;
+
+  margin: 0px;
+}
+
+.el-dialog__body {
+  padding: 0;
+}
+
+.Edialog {
+  padding: 0;
+  h2 {
+    color: #333;
+  }
+}
+
 .headbox {
   position: fixed;
   z-index: 100;
@@ -243,40 +781,287 @@ export default {
   right: 0px;
   bottom: 0px;
   display: flex;
-  justify-content: space-between;
-  background-color: white;
-  padding: 0 20px;
+  justify-content: space-around;
+  background-color: rgba(255, 255, 255, 0.083);
+  padding: 5px 0px;
   height: 60px;
-  border-bottom: 2px solid #f4f4f4;
+
   .leftHead {
     position: relative;
+
     .lefttxt {
       text-align: center;
+
       margin-top: 20px;
+
       display: inline-block;
+      color: #fff;
       font-family: "STXinwei";
     }
   }
-  .el-menu{
-    position: relative;
-  }
+
   #dicon {
     // color: #fff;
+
     font-size: 25px;
+
     margin: 0 2px;
   }
+
   .demo-type {
     margin-top: 15px;
     width: 130px;
+    i {
+      // color: #bbb;
+      color: #fff;
+    }
     .el-avatar {
       position: relative;
+
       right: -40px;
+
       top: -35px;
+
       margin-left: 10px;
     }
+
     .el-icon-takeaway-box {
       font-size: 30px;
     }
   }
 }
+
+.elItem {
+  background-color: #333;
+}
+
+// --------
+
+body {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  // height: 100vh;
+
+  // background-color: #f6f5f7;
+}
+
+h2 {
+  margin-bottom: 10px;
+
+  font-size: 32px;
+
+  text-transform: capitalize;
+}
+
+.container {
+  width: 100%;
+
+  height: 480px;
+
+  background-color: white;
+
+  // box-shadow: 0 14px 28px rgbawbo0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+.form-container {
+  position: absolute;
+
+  top: 0;
+
+  width: 50%;
+
+  height: 100%;
+
+  background-color: white;
+
+  transition: all 0.6s ease-in-out;
+}
+
+.form {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  height: 100%;
+
+  // width: 100%;
+
+  padding: 0 50px;
+}
+
+.demo-ruleForm {
+  height: 100%;
+
+  // padding: 0 50px;
+}
+
+input {
+  width: 100%;
+
+  margin: 8px 0;
+
+  padding: 12px;
+
+  background-color: #eee;
+
+  border: none;
+}
+
+.codePicBox {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  .el-input {
+    width: 50%;
+  }
+  button {
+    width: 120px;
+  }
+}
+
+.forget-password {
+  display: inline-block;
+
+  height: 20px;
+
+  text-decoration: none;
+
+  color: #bbb;
+
+  text-transform: capitalize;
+
+  font-size: 12px;
+}
+
+.forget-password:hover {
+  color: lightslategray;
+
+  border-bottom: 2px solid #ff4b2b;
+}
+
+button {
+  background: #ff4b2b;
+  padding: 10px 50px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  text-transform: uppercase;
+  color: white;
+  margin-top: 10px;
+  outline: none;
+  transition: transform 80;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.overlay_container {
+  position: absolute;
+
+  top: 0;
+
+  width: 50%;
+
+  height: 100%;
+
+  z-index: 100;
+
+  right: 0;
+
+  overflow: hidden;
+
+  transition: all 0.6s ease-in-out;
+}
+
+.overlay {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  left: -100%;
+  // background-color: #ff4b2b;
+  background-image: url("../assets/vangogh.jpg");
+  background-repeat: no-repeat;
+}
+
+.overlay_panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  color: white;
+  // padding: 0 40px;
+  background-image: url("../assets/vangogh.jpg");
+  background-repeat: no-repeat;
+  text-align: center;
+  h2 {
+    color: #fff;
+  }
+}
+
+.overlay_panel button {
+  background-color: transparent;
+
+  border: 1px solid white;
+}
+
+.overlay_panel p {
+  font-size: 18px;
+  color: rgb(230, 230, 230);
+  margin: 10px 0 15px 0;
+}
+
+.overlay_right_container {
+  right: 0;
+}
+
+.container.active .sign-up-container {
+  transform: translateX(100%);
+
+  z-index: 5;
+}
+
+.container.active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.container.active .overlay_container {
+  transform: translateX(-100%);
+}
+
+.container.active .overlay {
+  transform: translateX(50%);
+}
+.singup {
+  padding: 10px 50px;
+  border: 1px solid transparent;
+
+  border-radius: 20px;
+
+  text-transform: uppercase;
+
+  color: white;
+
+  margin-top: 10px;
+}
 </style>
+

@@ -1,7 +1,7 @@
 <template>
   <div class="footerbox">
-    <el-divider id="logTxt"><i class="el-icon-ship"></i></el-divider>
-    <div class="copyright">©2021 - 2022 By Shrimpsss</div>
+    <el-divider id="logTxt"><i></i></el-divider>
+    <div class="copyright">©2021 - 2022 By <a href="https://juejin.cn/user/783303009380040">Shrimpsss</a></div>
     <p>“Do not quench your inspiration and your imagination; do not become the slave of your model.”</p>
     <p> — Vincent van Gogh</p>
   </div>
@@ -18,14 +18,15 @@ export default {
 <style lang="less">
 .footerbox {
   // background-color: rgb(251, 250, 250);
-  padding: 0.7rem 20px;
-  height: 60px;
-  margin-bottom: 45px;
+  padding: 0.7rem 12% 20px;
   // border-top: 1px solid #e6e6e6;
+  background-color: rgb(36, 37, 39);
+  color: #bbb;
+  a{
+    color: #fff;
+    text-decoration: none;
+  }
   text-align: center;
-  // #logTxt{
-  //   background-color: transparent;
-  // }
   .el-icon-ship{
     font-size: 25px;
     background-color: transparent;
