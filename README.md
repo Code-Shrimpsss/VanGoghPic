@@ -1,19 +1,91 @@
-# van_pic
+# Van GoghPic #
 
-## Project setup
-```
-yarn install
-```
+本项目为壁纸图片网站，拥有主流人物风景图片与大量名人名画
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+包含多种功能 用户注册登录，图片下载，图片收藏与图片分享
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## 本项目所用技术 ##
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+| 前端                    | 后端          |
+| ----------------------- | ------------- |
+| Vue2 + VueX + VueRouter | Mysql         |
+| Axios + Promise         | Docker        |
+| Element-Ui              | Redis         |
+| Less                    | Django + DRF  |
+| Auther                  | Elasticsearch |
+
+# 前端页面 #
+
+前端页面分为五个主功能页面，如图
+
+![img](https://secure2.wostatic.cn/static/s7KVE4863w6wKqQZBqTvQQ/image.png)
+
+通用头部
+
+通用头部功能页面是全局置顶功能导航框
+
+今日状态：
+
+- 获赞
+- 天气
+
+个人中心：
+
+- 个人页面修改与展示
+- 个人图片上传
+
+收藏夹：
+
+- 收藏图片
+
+壁纸类型
+
+壁纸类型用于壁纸分类
+
+- 动漫
+- 风景
+- 名画
+- 萌宠
+
+主页
+
+若为登录则无法收藏或评论
+
+用于展示用户点击网站看到的主网页
+
+轮播图：
+
+- 随机图片
+
+热门图片推荐：
+
+- 收藏最多的图片
+- 点赞最多的图片
+
+壁纸详情页
+
+用户点击壁纸将壁纸放大进入的详情页
+
+- 壁纸收藏
+- 壁纸下载
+- 壁纸点赞
+- 壁纸评论
+- 壁纸内容
+- 壁纸介绍
+- 壁纸规格
+
+登录注册
+
+用户登录页面与注册页面的具体功能
+
+登录：
+
+- 手机号 / 用户名
+- 密码
+
+注册：
+
+- 用户名
+- 手机号
+- 密码 / 确认密码
+
