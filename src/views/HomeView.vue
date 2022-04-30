@@ -6,19 +6,22 @@
         <h1>Lightweight Social Wallpaper Site</h1>
       </div>
       <div class="Banner">
-        <img src="../assets/vangogh.jpg" alt="" />
+        <img src="../assets/vangogh1.jpg" alt="" />
       </div>
       <div class="FeaturesBox">
         <p class="icon-user">
           &nbsp;{{ counts.UserCount }} <br />
+          <i>热爱图片的收藏家</i><br />
           <span>collectors who love pictures</span>
         </p>
         <p class="icon-film">
           &nbsp;{{ counts.FavCount }} <br />
+          <i>值得一看的著名画册</i><br />
           <span>A famous picture book worth watching</span>
         </p>
         <p class="icon-picture">
           &nbsp;{{ counts.picCount }} <br />
+          <i>你所看到与理解的每一张世界</i><br />
           <span>Every world you see and understand</span>
         </p>
       </div>
@@ -27,33 +30,29 @@
 </template>
 <script>
 import "../css/font-awesome.min.css";
-import axios from "axios";
-import host from "../js/host";
+import { getUser } from "@/api/userAPi";
 export default {
   name: "HomeView",
   data() {
     return {
-      host: host,
       counts: {
-        picCount: "4239",
+        UserCount: "42",
         FavCount: "339",
-        UserCount: "30",
+        picCount: "4239",
       },
     };
   },
   methods: {
-    AllCounts(){
-      axios.get(this.host + '/allcounts/')
-            .then(res => {
-              console.log(res.data);
-              this.counts.UserCount = res.data.counts
-            })
-            .catch(err => console.log(err))
-    }
+    async getUserPro() {
+      const { data: res } = await getUser();
+      this.counts.UserCount = res.counts[0];
+      this.counts.FavCount = res.counts[1];
+      this.counts.picCount = res.counts[2];
+    },
   },
-  mounted () {
-    this.AllCounts()
-  }
+  created() {
+    this.getUserPro();
+  },
 };
 </script>
 <style lang="less">
@@ -106,8 +105,14 @@ h2 {
         display: block;
         font-size: 30px;
         margin: 30px 0;
+        i {
+          font-style: normal;
+          font-size: 20px;
+          color: gray;
+          font-family: Georgia, "Times New Roman", Times, serif;
+        }
         span {
-          font-family:Georgia, 'Times New Roman', Times, serif;
+          font-family: Georgia, "Times New Roman", Times, serif;
           font-size: 25px;
           color: gray;
         }

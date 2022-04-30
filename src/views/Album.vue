@@ -1,13 +1,13 @@
 <template>
-  <div id="favoritesPage">
+  <div id="favoritesPage" v-if="listData">
     <div class="headbox">
       <el-button
         type="primary"
         class="rebtn"
         icon="el-icon-back"
-        @click="$router.back(-1)"
+        @click="$router.back()"
       ></el-button>
-      <h1 class="headtxt">{{ listData.favoritName }}</h1>
+      <h1 class="headtxt">{{ listData.title }}</h1>
     </div>
     <main>
       <div class="funbox">
@@ -15,10 +15,9 @@
           <div>
             <el-avatar
               style="margin-left: 10px"
-              size="center"
-              :src="listData.authorImg"
+              :src="listData.author_img"
             ></el-avatar>
-            <span>&nbsp;{{ listData.authorName }}</span>
+            <span>&nbsp;{{ listData.username }}</span>
           </div>
           <div>
             <el-button
@@ -40,15 +39,19 @@
           </el-drawer>
         </div>
         <div class="funRight">
-          <p>{{ listData.introduce }}</p>
+          <p>{{ listData.expostitory }}</p>
+        </div>
+        <div class="createTime">
+          <p class="el-icon-date">
+            &nbsp;创建时间：{{ listData.created_time }}
+          </p>
         </div>
       </div>
-
       <div class="mainbox">
         <el-image
-          :preview-src-list="listData.urls"
+          :preview-src-list="listData.img_list"
           class="liImg"
-          v-for="url in listData.urls"
+          v-for="url in listData.img_list"
           :key="url"
           :src="url"
           fit="cover"
@@ -62,41 +65,21 @@
 
 <script>
 import footers from "../components/Footer.vue";
+import { getSignAlbum } from "@/api/albumAPI";
 export default {
   data() {
     return {
       drawer: false,
       star: "el-icon-star-off",
-      listData: {
-        Bid: "1212",
-        authorName: "不素之霸",
-        authorImg: "https://lipsum.app/60x60/000/fff",
-        defaultImg: "https://lipsum.app/random/640x480",
-        boxUrl: `/favorites/${this.Bid}`,
-        favoritName: "梵高·画册",
-        introduce:
-          "梵高出生于1853年3月30日荷兰乡村津德尔特的一个新教牧师家庭，早年的他做过职员和商行经纪人，还当过矿区的传教士最后他投身于绘画。他早期画风写实，受到荷兰传统绘画及法国写实主义画派的影响。1886年，他来到巴黎，结识印象派和新印象派画家，并接触到日本浮世绘的作品，视野的扩展使其画风巨变。1888年，来到法国南部小镇阿尔，创作《阿尔的吊桥》；同年与画家保罗·高更交往，但由于二人性格的冲突和观念的分歧，合作很快便告失败。此后，梵高的疯病（有人记载是“癫痫病”）时常发作，但神志清醒时他仍然坚持作画。1889年创作《星月夜》。1890年7月，梵高在精神错乱中开枪自杀，年仅37岁, Van Gogh",
-        islike: true,
-        comment: 233,
-        urls: [
-          "https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg",
-          "https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg",
-          "https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg",
-          "https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg",
-          "https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg",
-          "https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg",
-          "https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg",
-        ],
-      },
+      listData: "",
+      tid: this.$route.params.id,
     };
   },
   components: {
     footers,
   },
   methods: {
-    onlike() {
-      console.log(this.value1);
-    },
+    // 切换收藏按钮
     stars() {
       if (this.listData.islike) {
         this.star = "el-icon-star-on";
@@ -114,6 +97,37 @@ export default {
         });
       }
       console.log(this.listData.islike);
+    },
+    // 首次加载时的收藏按钮
+    infoStar() {
+      if (this.listData.islike) {
+        this.star = "el-icon-star-on";
+      } else {
+        this.star = "el-icon-star-off";
+      }
+    },
+    // 画册加载
+    async getSignAlbums(pid) {
+      const { data: res } = await getSignAlbum(pid);
+      let dataD = res.datalist;
+      if (dataD) {
+        dataD.img_list = dataD.img_list.split(";");
+        this.listData = dataD
+      }
+    },
+  },
+  created() {
+    this.infoStar();
+    // 首次画册加载缓冲
+    this.getSignAlbums(this.tid);
+  },
+  // 监听画册变化
+  watch: {
+    $route(to, from) {
+      if (typeof to.params.id != NaN) {
+        console.log("route-", to.params.id);
+        this.getSignAlbums(to.params.id);
+      }
     },
   },
 };
@@ -171,18 +185,15 @@ main {
   width: 100%;
   height: 100%;
   display: flex;
-  // padding: 0 5%;
 }
 .Commentbox {
   color: #dbdbdb;
 }
 .funbox {
-  width: 40%;
+  width: 100%;
   height: 20%;
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: center;
   padding: 20px 3%;
+  color: rgb(232, 232, 232);
   .funLeft {
     display: flex;
     align-items: center;
@@ -202,9 +213,9 @@ main {
     font-size: 25px;
   }
 }
-.mainbox{
-  height: 600px;
-  padding: 0px 20px ;
+.mainbox {
+  // height: 600px;
+  padding: 0px 80px;
 }
 .liImg {
   margin: 5px 5px 0px;
@@ -213,5 +224,9 @@ main {
 }
 .starBtn {
   font-size: 30px;
+}
+.createTime {
+  margin-top: 30px;
+  font-size: 18px;
 }
 </style>

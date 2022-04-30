@@ -1,15 +1,10 @@
 <template>
   <div class="headbox">
-    <!-- 左侧Logo以及黑夜白天 -->
-
     <div class="leftHead">
       <!-- <i id="dicon" class="el-icon-moon"></i> -->
-
-      <h3 class="lefttxt">Van GoghPic</h3>
+      <h3 class="lefttxt"><a href="/">Van GoghPic</a></h3>
     </div>
-
     <!-- 主要导航功能块 -->
-
     <el-menu
       :default-active="activeIndex"
       class="el-menu"
@@ -21,217 +16,13 @@
     >
       <el-menu-item class="el-icon-s-home" index="/">主页</el-menu-item>
       <el-menu-item class="el-icon-menu" index="/about">类型</el-menu-item>
-      <el-menu-item class="el-icon-s-management" index="/phone"
+      <el-menu-item class="el-icon-s-management" index="/album"
         >画册</el-menu-item
       >
     </el-menu>
-
     <div class="demo-type">
       <a href="/favorites"><i class="el-icon-takeaway-box"></i></a>
-
-      <!-- 登录成功的头像链接 -->
-
-      <div class="befoBox" v-if="username && token">
-        <a href="/My">
-          <el-avatar
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-            @error="errorHandler"
-          >
-            <img
-              src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-            />
-          </el-avatar>
-        </a>
-      </div>
-
-      <!-- 未登录则进行注册或登录 -->
-
-      <div class="befoBox" v-else @click="dialogVisible = true">
-        <el-avatar @error="errorHandler">
-          <img
-            src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
-          />
-        </el-avatar>
-      </div>
-
-      <!-- 登录页面信息 -->
-
-      <el-dialog
-        class="Edialog"
-        :visible.sync="dialogVisible"
-        :modal-append-to-body="false"
-        :show-close="false"
-      >
-        <div
-          class="container"
-          :class="{ active: Infoclass == true ? 'active' : '' }"
-        >
-          <!-- register -->
-
-          <div class="form-container sign-up-container">
-            <div class="form">
-              <h2>注册</h2>
-
-              <el-input
-                class="el-input user"
-                type="text"
-                placeholder="输入您的用户名"
-                v-model="username"
-                maxlength="20"
-                minlength="5"
-                show-word-limit
-              >
-              </el-input>
-
-              <span v-show="error_name" class="el-icon-warning">{{
-                error_name_message
-              }}</span>
-
-              <el-input
-                class="el-input password"
-                type="password"
-                placeholder="输入您的密码"
-                v-model="password"
-                :show-password="true"
-              >
-              </el-input>
-
-              <span v-show="error_password" class="el-icon-warning"
-                >请输入8-20位的密码</span
-              >
-              <el-input
-                class="el-input password2"
-                type="password2"
-                placeholder="输入您的密码"
-                v-model="password2"
-                :show-password="true"
-              >
-              </el-input>
-
-              <span v-show="error_check_password" class="el-icon-warning"
-                >两次输入的密码不一致</span
-              >
-
-              <el-input
-                class="el-input phone"
-                type="text"
-                placeholder="输入您的电话"
-                v-model="phone"
-                maxlength="11"
-                show-word-limit
-              >
-              </el-input>
-
-              <span v-show="error_phone" class="el-icon-warning">{{
-                error_phone_message
-              }}</span>
-
-              <div class="codePicBox">
-                <el-input
-                  class="el-input codepic"
-                  type="text"
-                  placeholder="输入验证码"
-                  v-model="image_code"
-                >
-                </el-input>
-
-                <img
-                  :src="image_code_url"
-                  @click="generate_image_code"
-                  alt="图形验证码"
-                  class="pic_code"
-                />
-
-                <span v-show="error_image_code" class="el-icon-warning">{{
-                  error_image_code_message
-                }}</span>
-              </div>
-
-              <div class="codePicBox">
-                <el-input
-                  class="el-input message"
-                  type="text"
-                  placeholder="输入短信验证码"
-                  v-model="sms_code"
-                >
-                </el-input>
-
-                <button @click="send_sms_code" class="get_msg_code">
-                  {{ sms_code_tip }}
-                </button>
-              </div>
-              <span class="el-icon-warning" v-show="error_sms_code">{{
-                error_sms_code_message
-              }}</span>
-
-              <button class="signUp" @click="on_submit()" :plain="true">
-                注册
-              </button>
-            </div>
-          </div>
-
-          <!-- login -->
-
-          <div class="form-container sign-in-container">
-            <div class="form">
-              <h2>登录</h2>
-
-              <el-input
-                class="el-input username"
-                type="text"
-                placeholder="输入您的用户名"
-                v-model="username"
-                @blur="check_username_login"
-              >
-              </el-input>
-              <div class="el-icon-warning" v-show="error_username" v-cloak>
-                请填写用户名或手机号
-              </div>
-              <el-input
-                class="el-input password"
-                type="password"
-                placeholder="输入您的密码"
-                :show-password="true"
-                v-model="password"
-                @blur="check_pwd_login"
-              >
-              </el-input>
-              <div class="el-icon-warning" v-show="error_pwd" v-cloak>
-                {{ error_pwd_message }}
-              </div>
-              <a href="#" class="forget-password">forget your password</a>
-              <button class="signIn" @click="on_submit_login()" :plain="true">
-                登录
-              </button>
-            </div>
-          </div>
-
-          <!-- overlay container -->
-
-          <div class="overlay_container">
-            <div class="overlay">
-              <!-- overlay left -->
-
-              <div class="overlay_panel overlay_left_container">
-                <h2>welcome back!</h2>
-                <p>Continue to contribute your picture book</p>
-
-                <button id="sign-in" @click="infoLogin()">登录</button>
-              </div>
-
-              <!-- overlay right -->
-
-              <div class="overlay_panel overlay_right_container">
-                <h2>hello collectors!</h2>
-
-                <p>Looking forward to your joining this picture world</p>
-
-                <button id="sign-up" @click="infoRegister()">注册</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </el-dialog>
+      <Login></Login>
     </div>
   </div>
 </template>
@@ -239,466 +30,33 @@
 
 
 <script>
-import axios from "axios";
 import host from "@/js/host";
-
+import Login from "@/components/Login.vue";
 export default {
+  components: {
+    Login,
+  },
   data() {
     return {
       host: host,
       activeIndex: "1", // 头部页面默认下标
-      dialogVisible: false, // 显示登录注册框
-      Infoclass: false, // 登录注册框切换
-      // 登录注册共用
-      token: "",
-      username: "",
-      password: "",
-
-      // 注册
-      password2: "",
-      phone: "",
-      codepic: "", // 图形验证码
-      sms_code: "", // 短信验证码
-      sms_code_tip: "获取短信验证码",
-      image_code: "",
-      image_code_id: "",
-      image_code_url: "",
-      error_name: false,
-      error_password: false,
-      error_check_password: false,
-      error_phone: false,
-      error_sms_code: false,
-      error_name_message: "",
-      error_phone_message: "请输入手机号码",
-      error_sms_code_message: "",
-      error_image_code: "",
-      error_image_code_message: "",
-
-      // 登录
-      error_username: false,
-      error_pwd: false,
-      error_pwd_message: "请填写密码",
-      remember: false,
     };
-  },
-  mounted() {
-    // 向服务器获取图片验证码
-
-    this.generate_image_code();
-  },
-  created() {
-    // console.log(this.$cookies);
-    // this.username = this.$cookies.get("username");
-    // this.token = this.$cookies.get("token");
   },
   methods: {
     errorHandler() {
       return true;
     },
-    // 切换清空方法
-    infoLogin() {
-      this.Infoclass = false;
-      (this.username = ""),
-        (this.password = ""),
-        (this.password2 = ""),
-        (this.phone = ""),
-        (this.codepic = ""), // 图形验证码
-        (this.message = ""), // 短信验证码
-        (this.error_name = false),
-        (this.error_password = false),
-        (this.error_check_password = false),
-        (this.error_phone = false),
-        (this.sms_code = ""),
-        (this.image_code = ""),
-        (this.error_sms_code = false);
-    },
-    infoRegister() {
-      this.Infoclass = true;
-      this.username = "";
-      this.password = "";
-    },
-
-    // 获取cookie
-    getCookie(name) {
-      var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-      return r ? r[1] : undefined;
-    },
-
-    // 提取地址栏中的查询字符串
-    get_query_string(name) {
-      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-      var r = window.location.search.substr(1).match(reg);
-      if (r != null) {
-        return decodeURI(r[2]);
-      }
-      return null;
-    },
-    // 生成uuid
-
-    generateUUID: function () {
-      var d = new Date().getTime();
-
-      if (window.performance && typeof window.performance.now === "function") {
-        d += performance.now(); //use high-precision timer if available
-      }
-
-      var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-        /[xy]/g,
-
-        function (c) {
-          var r = (d + Math.random() * 16) % 16 | 0;
-
-          d = Math.floor(d / 16);
-
-          return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-        }
-      );
-
-      return uuid;
-    },
-
-    // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
-    generate_image_code: function () {
-      // 生成一个编号 : 严格一点的使用uuid保证编号唯一， 不是很严谨的情况下，也可以使用时间戳
-
-      this.image_code_id = this.generateUUID();
-
-      // 设置页面中图片验证码img标签的src属性
-
-      this.image_code_url =
-        this.host + "/image_codes/" + this.image_code_id + "/";
-    },
-
-    // 检查用户名
-    check_username: function () {
-      var re = /^[a-zA-Z0-9_-]{5,20}$/;
-
-      var re2 = /^[0-9]+$/;
-
-      if (re.test(this.username) && !re2.test(this.username)) {
-        this.error_name = false;
-      } else {
-        this.error_name_message = "请输入5-20个字符的用户名且不能为纯数字";
-
-        this.error_name = true;
-      }
-
-      // 检查重名
-
-      if (this.error_name == false) {
-        var url = this.host + "/usernames/" + this.username + "/count/";
-
-        axios
-
-          .get(url, {
-            responseType: "json",
-
-            withCredentials: true,
-          })
-
-          .then((response) => {
-            console.log(response);
-
-            console.log(response.data);
-
-            if (response.data.count > 0) {
-              this.error_name_message = "用户名已存在";
-
-              this.error_name = true;
-            } else {
-              this.error_name = false;
-            }
-          })
-
-          .catch((error) => {
-            console.log(error.response);
-          });
+    FatherBox(data) {
+      this.dialogVisible = data;
+      if (this.username && this.token) {
+        this.dialogVisible = false;
       }
     },
-    check_pwd() {
-      var len = this.password.length;
-      if (len < 8 || len > 20) {
-        this.error_password = true;
-      } else {
-        this.error_password = false;
-      }
-    },
-
-    check_cpwd() {
-      if (this.password != this.password2) {
-        this.error_check_password = true;
-      } else {
-        this.error_check_password = false;
-      }
-    },
-
-    // 检查手机号
-
-    check_phone() {
-      var re = /^1[345789]\d{9}$/;
-      if (re.test(this.phone)) {
-        this.error_phone = false;
-      } else {
-        this.error_phone_message = "您输入的手机号格式不正确";
-        this.error_phone = true;
-      }
-
-      if (this.error_phone == false) {
-        var url = this.host + "/mobiles/" + this.phone + "/count/";
-
-        axios
-          .get(url, {
-            responseType: "json",
-            withCredentials: true,
-          })
-          .then((response) => {
-            if (response.data.count > 0) {
-              this.error_phone_message = "手机号已存在";
-              this.error_phone = true;
-            } else {
-              this.error_phone = false;
-              console.log(321);
-            }
-          })
-
-          .catch((error) => {
-            console.log(error.response);
-          });
-      }
-    },
-
-    // 检查图片验证码
-
-    check_image_code() {
-      if (!this.image_code) {
-        this.error_image_code_message = "请填写图片验证码";
-        this.error_image_code = true;
-      } else {
-        this.error_image_code = false;
-      }
-    },
-
-    check_sms_code() {
-      if (!this.sms_code) {
-        this.error_sms_code_message = "请填写短信验证码";
-        this.error_sms_code = true;
-      } else {
-        this.error_sms_code = false;
-      }
-    },
-
-    // 发送手机短信验证码
-    send_sms_code() {
-      if (this.sending_flag == true) {
-        return;
-      }
-      this.sending_flag = true;
-      // 校验参数，保证输入框有数据填写
-      this.check_phone();
-
-      if (this.error_phone == true) {
-        this.sending_flag = false;
-        return;
-      }
-
-      // 向后端接口发送请求，让后端发送短信验证码
-
-      var url =
-        this.host +
-        "/sms_codes/" +
-        this.phone +
-        "/" +
-        "?image_code=" +
-        this.image_code +
-        "&image_code_id=" +
-        this.image_code_id;
-
-      axios
-        .get(url, {
-          responseType: "json",
-          withCredentials: true,
-        })
-
-        .then((response) => {
-          console.log(response);
-          if (response.data.code == 0) {
-            console.log("duanxin ok");
-            // 表示后端发送短信成功
-            // 倒计时60秒，60秒后允许用户再次点击发送短信验证码的按钮
-            var num = 60;
-            // 设置一个计时器
-            var t = setInterval(
-              () => {
-                if (num == 1) {
-                  // 如果计时器到最后, 清除计时器对象
-                  clearInterval(t);
-                  // 将点击获取验证码的按钮展示的文本回复成原始文本
-                  this.sms_code_tip = "获取短信验证码";
-                  // 将点击按钮的onclick事件函数恢复回去
-                  this.sending_flag = false;
-                } else {
-                  num -= 1;
-                  // 展示倒计时信息
-                  this.sms_code_tip = num + "秒";
-                }
-              },
-              1000,
-              60
-            );
-          } else {
-            console.log("duanxin error");
-            this.error_sms_code_message = response.data.errmsg;
-            this.error_sms_code = true;
-          }
-        })
-
-        .catch((error) => {
-          if (error.response.status == 400) {
-            this.error_sms_code_message = error.response.data.message;
-            this.error_sms_code = true;
-          } else {
-            console.log(error.response.data);
-          }
-          this.sending_flag = false;
-        });
-    },
-
-    // 注册
-
-    on_submit() {
-      this.check_username();
-      this.check_pwd();
-      this.check_cpwd();
-      this.check_phone();
-      this.check_sms_code();
-      // 点击注册按钮之后, 发送请求 (下面的代码是通过请求体传参的)
-      if (
-        this.error_name == false &&
-        this.error_password == false &&
-        this.error_check_password == false &&
-        this.error_phone == false &&
-        this.error_sms_code == false
-      ) {
-        axios
-          .post(
-            this.host + "/register/",
-            {
-              username: this.username,
-              password: this.password,
-              password2: this.password2,
-              mobile: this.phone,
-              sms_code: this.sms_code,
-            },
-            {
-              responseType: "json",
-
-              withCredentials: true,
-            }
-          )
-
-          .then((response) => {
-            if (response.data.code == 0) {
-              this.$message("这是一条消息提示");
-              location.href = "/";
-            }
-
-            if (response.data.code == 400) {
-              alert(response.data.errmsg);
-            }
-          })
-
-          .catch((error) => {
-            if (error.response.code == 400) {
-              if ("non_field_errors" in error) {
-                this.error_sms_code_message = error.response;
-              } else {
-                this.error_sms_code_message = "数据有误";
-              }
-              this.error_sms_code = true;
-            } else {
-              console.log(error);
-            }
-          });
-      }
-    },
-
-    // --- 登录
-    // 检查数据
-    check_username_login: function () {
-      if (!this.username) {
-        this.error_username = true;
-      } else {
-        this.error_username = false;
-      }
-    },
-    check_pwd_login: function () {
-      if (!this.password) {
-        this.error_pwd_message = "请填写密码";
-        this.error_pwd = true;
-      } else {
-        this.error_pwd = false;
-      }
-    },
-    // 表单提交
-    on_submit_login: function () {
-      this.check_username();
-      this.check_pwd();
-
-      if (this.error_username == false && this.error_pwd == false) {
-        axios
-          .post(
-            this.host + "/login/",
-            {
-              username: this.username,
-              password: this.password,
-              remembered: this.remember,
-            },
-            {
-              responseType: "json",
-              // 发送请求的时候, 携带上cookie
-              withCredentials: true,
-              // crossDomain: true
-            }
-          )
-          .then((response) => {
-            if (response.data.code == 0) {
-              // 跳转页面
-              var return_url = this.get_query_string("next");
-              if (!return_url) {
-                console.log(response);
-                // this.$cookies.set(
-                //   "token",
-                //   response.data.result.token,
-                //   "Shrimps"
-                // );
-                this.$cookies.set(
-                  "username",
-                  response.data.username
-                );
-                this.$message({
-                  message: "登录成功 (●'◡'●) 欢迎回家",
-                  type: "success",
-                });
-
-                return_url = "/";
-              }
-              // location.href = return_url;
-            } else if (response.data.code == 400) {
-              this.error_pwd_message = "用户名或密码错误";
-              this.error_pwd = true;
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-            if (error.response.status == 400) {
-              this.error_pwd_message = "用户名或密码错误";
-            } else {
-              this.error_pwd_message = "服务器错误";
-            }
-            this.error_pwd = true;
-          });
-      }
-    },
+  },
+  created() {
+    // 页面一创建，就去cookie中取值
+    this.username = this.$cookies.get("username");
+    this.token = this.$cookies.get("token");
   },
 };
 </script>
@@ -797,6 +155,10 @@ ul {
       display: inline-block;
       color: #fff;
       font-family: "STXinwei";
+      a {
+        text-decoration: none;
+        color: #fff;
+      }
     }
   }
 
@@ -996,8 +358,9 @@ button:active {
   height: 100%;
   left: -100%;
   // background-color: #ff4b2b;
-  background-image: url("../assets/vangogh.jpg");
+  background-image: url("../assets/vangogh1.jpg");
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .overlay_panel {
@@ -1012,7 +375,7 @@ button:active {
   // padding: 0 40px;
   background-image: url("../assets/vangogh.jpg");
   background-repeat: no-repeat;
-  text-align: center;
+  background-size: cover;
   h2 {
     color: #fff;
   }
@@ -1026,7 +389,7 @@ button:active {
 
 .overlay_panel p {
   font-size: 18px;
-  color: rgb(230, 230, 230);
+  // color: rgb(230, 230, 230);
   margin: 10px 0 15px 0;
 }
 
@@ -1062,6 +425,11 @@ button:active {
   color: white;
 
   margin-top: 10px;
+}
+
+.el-menu li {
+  font-size: 18px;
+  font-weight: 700;
 }
 </style>
 

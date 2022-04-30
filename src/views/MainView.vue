@@ -1,9 +1,11 @@
 <template>
   <div>
+    <!-- 头部组件 -->
     <headerView></headerView>
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <!-- 底部组件 -->
     <footer-view></footer-view>
   </div>
 </template>

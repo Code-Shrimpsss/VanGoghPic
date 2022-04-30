@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MainView from '../views/MainView.vue'
-import FavoritesPageView from '../views/FavoritesPage.vue'
+import AlbumView from '../views/Album.vue'
+import error from '../views/404.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,9 +22,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
       },
       {
-        path: '/phone',
-        name: 'phone',
-        component: () => import(/* webpackChunkName: "phone" */ '../views/PhoneView.vue')
+        path: '/album',
+        name: 'album',
+        component: () => import(/* webpackChunkName: "phone" */ '../views/AlbumView.vue')
       }
     ]
   },
@@ -39,12 +40,23 @@ const routes = [
   },
   {
     // 搜索结果页
-    // path: '/favorites/:id',
-    path: '/favorites/page',
-    component: FavoritesPageView,
-    name: 'favoritespage',
+    path: '/album/:id',
+    component: AlbumView,
+    name: 'album',
     props: true
   },
+  {
+    // 创建画册页
+    path: '/createimg',
+    name: 'createimg',
+    component: () => import(/* webpackChunkName: "createImg" */ '../views/CreateImgView'),
+  },
+  {
+    // 404页面
+    path: '*',
+    component: error,
+    meta: { title: '页面走丢了（⊙ｏ⊙）' }
+  }
 ]
 
 const router = new VueRouter({

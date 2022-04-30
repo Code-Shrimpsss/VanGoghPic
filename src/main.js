@@ -14,6 +14,9 @@ Vue.config.productionTip = false
 import host from '@/js/host'
 Vue.prototype.$host = host
 
+import axios from 'axios'
+Vue.prototype.$axios = axios
+
 new Vue({
   router,
   store,

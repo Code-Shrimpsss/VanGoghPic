@@ -1,12 +1,8 @@
 <template>
   <div id="phone">
     <div class="likeleft">
-      <h2>动漫</h2>
-        <favor-box></favor-box>
-      <h2>梵高</h2>
-      <div class="mylike">
-        <favor-box></favor-box>
-      </div>
+      <h2>画册</h2>
+      <favor-box></favor-box>
     </div>
   </div>
 </template>
@@ -17,7 +13,6 @@ export default {
   components: {
     favorBox,
   },
-
 };
 </script>
 

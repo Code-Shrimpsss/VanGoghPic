@@ -14,18 +14,24 @@
         <div class="Pinfo">
           <h1>{{ listdata.username }}</h1>
           <p class="el-icon-cpu">
-            &nbsp; id: <span icon="el-icon-edit">{{ listdata.pid }}</span>
+            &nbsp; 第<span icon="el-icon-edit"> {{ listdata.id }} </span
+            >位收藏家
           </p>
           <p class="el-icon-wind-power">
-            &nbsp; hobby: &nbsp;<el-button type="primary">{{
-              options[0].label
-            }}</el-button>
-            <el-button type="success">风景</el-button>
-            <el-button type="info">宇宙</el-button>
+            &nbsp; hobby : &nbsp;
+            <el-button
+              class="btn"
+              v-for="item in listdata.hobbys"
+              :key="item"
+              type="primary"
+              >{{ item }}</el-button
+            >
+            <!-- <el-button class="btn" type="success">{{ item }}</el-button>
+            <el-button class="btn" type="info">{{ item }}</el-button> -->
           </p>
           <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
           <div class="collectBox">
-            <div v-for="item in listdata.likeUrls" :key="item">
+            <div v-for="item in likeUrls" :key="item">
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
@@ -33,21 +39,21 @@
           </div>
           <h3 class="el-icon-magic-stick">&nbsp;选言</h3>
           <div class="txtbox">
-            {{ listdata.pmessage }}
+            {{ listdata.signature }}
           </div>
         </div>
         <div>
-         <div class="authorBox">
-            <el-avatar class="authorimg" :src="listdata.authorUrl"></el-avatar>
-          <el-button
-            class="aubox"
-            type="primary"
-            icon="el-icon-sort"
-            @click="Pshow = !Pshow"
+          <div class="authorBox">
+            <el-avatar class="authorimg" :src="listdata.author_img"></el-avatar>
+            <el-button
+              class="aubox"
+              type="primary"
+              icon="el-icon-sort"
+              @click="Pshow = !Pshow"
             ></el-button>
             <!-- el-icon-setting -->
-         </div>
-          <button class="outLogin">退出登录</button>
+          </div>
+          <button class="outLogin" @click="logout()">退出登录</button>
         </div>
       </div>
 
@@ -59,32 +65,35 @@
             <el-input
               class="topm"
               placeholder="请输入要更改的用户名"
-              v-model="rename"
+              v-model="ruleFrom.rename"
               maxlength="20"
               :show-word-limit="true"
             >
               <i slot="prefix" class="el-input__icon el-icon-user-solid"></i>
             </el-input>
             <h4>爱好</h4>
+            <!-- <i>*&nbsp;最多为3个</i> -->
             <el-select
               class="topm"
-              v-model="value1"
+              v-model="ruleFrom.hobby"
               multiple
               filterable
               allow-create
               default-first-option
-              placeholder="请选择"
+              placeholder="可以自己输入喜好"
+              :multiple-limit="3"
             >
               <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value"
+                :value="item.label"
               >
               </el-option>
             </el-select>
             <h4>选言</h4>
             <el-input
+              class="textareaBox"
               type="textarea"
               :rows="2"
               placeholder="请输入内容"
@@ -96,13 +105,14 @@
             <h4 class="topm">修改头像</h4>
             <el-upload
               class="avatar-uploader"
-              action="https://www.mocky.io/v2/5185415ba171ea3a00704eed/posts/"
+              :action="AvatarUrl"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <!-- 选取文件后立即进行上传 :auto-upload="false" -->
+              <img v-if="urlImg" :src="urlImg" class="avatar" />
+              <i class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </div>
           <div class="footbox">
@@ -110,7 +120,7 @@
               class="subbtn"
               type="primary"
               :plain="true"
-              @click="submitForm('ruleForm')"
+              @click="submitForm(ruleFrom)"
               >完成geng</el-button
             >
           </div>
@@ -125,6 +135,7 @@
 
 <script>
 import footers from "../components/Footer.vue";
+import { getUserDate, ReviseUser } from "@/api/userAPi";
 export default {
   data() {
     return {
@@ -135,17 +146,10 @@ export default {
         reimg: "",
         remessage: "",
       },
-      imageUrl: "",
+      urlImg : "http://localhost:3000/upload/",
       // 主要数据源
-      listdata: {
-        username: "坂本龙一",
-        pid: "w897612",
-        authorUrl:
-          "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png",
-        likeUrls: ["https://lipsum.app/312x208/000/fff"],
-        pmessage:
-          "世间的事情，往往失之毫厘，就会造成莫大的差异;世间的事情，往往失之毫厘，就会造成莫大的差异 -- 莎士比亚",
-      },
+      likeUrls: ["https://lipsum.app/312x208/000/fff"],
+      listdata: {},
       // 选项数据源
       options: [
         {
@@ -183,6 +187,7 @@ export default {
       ],
       value1: [],
       Pshow: false,
+      AvatarUrl: "http://192.168.177.129:8000/updata/images/",
     };
   },
   components: {
@@ -190,37 +195,68 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(file.raw);
+      console.log(res);
+      this.urlImg = URL.createObjectURL(file.raw);
+      this.ruleFrom.reimg = file.raw
+      // let binaryData = [];
+      // binaryData.push(file.raw);
+      // this.imageUrl= window.URL.createObjectURL(binaryData));
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
+      const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error("上传头像图片只能是 JPG 或 PNG 或 GIF 格式!");
       }
       if (!isLt2M) {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     },
+    // 提交修改
     submitForm(val) {
-      console.log(val);
-      // this.
-      this.Pshow = !this.Pshow;
-
-      if (val) {
-        this.$message({
-          message: "修改成功",
-          type: "success",
-        });
+      const { data:res } = ReviseUser(val);
+      if (res.code === 200) {
+        this.$message.success("修改成功");
+        this.Pshow = false;
+        this.getUserDate();
       } else {
-        this.$message({
-          message: "警告哦，这是一条警告消息",
-          type: "warning",
-        });
+        this.$message.error("修改失败");
       }
+      
+      // if (val) {
+      //   this.Pshow = !this.Pshow;
+      //   this.$message({
+      //     message: "修改成功",
+      //     type: "success",
+      //   });
+      // } else {
+      //   this.$message({
+      //     message: "修改失败",
+      //     type: "warning",
+      //   });
+      // }
     },
+    logout() {
+      // 1.删除cookies中的用户信息
+      this.$cookies.remove("username");
+      this.$cookies.remove("token");
+      this.$router.push("/");
+    },
+    // 显示用户数据
+    async infoUser() {
+      let user = this.$cookies.get("username");
+      const { data: res } = await getUserDate(user);
+      this.listdata = res.data;
+      // 将喜好通过<;>切割转换为数组 再截取前三位
+      this.listdata.hobbys = res.data.hobby.split(";").slice(0, 3);
+      console.log(this.listdata.hobbys);
+    },
+  },
+  created() {
+    this.infoUser();
   },
 };
 </script>
@@ -289,6 +325,7 @@ body,
     justify-content: space-between;
   }
   .mianform {
+    animation: both;
     .Pinfo {
       position: relative;
       text-align: left;
@@ -322,7 +359,7 @@ body,
       width: 100px;
       height: 100px;
     }
-    .authorBox{
+    .authorBox {
       position: relative;
     }
     .aubox {
@@ -344,9 +381,9 @@ body,
       }
     }
     .footbox {
-      position: absolute;
-      bottom: 70px;
-      left: 357px;
+      // position: absolute;
+      bottom: 90px;
+      left: 607px;
       .subbtn {
         width: 120px;
         height: 40px;
@@ -376,10 +413,11 @@ body,
   border-radius: 50%;
 }
 .avatar {
-  width: 100px;
-  height: 100px;
+  width: 105px;
+  height: 105px;
   display: block;
   border-radius: 50%;
+  position: absolute;
 }
 .topm {
   margin-bottom: 10px;
@@ -388,5 +426,14 @@ body,
 .outLogin {
   margin-top: 20px;
   padding: 10px;
+}
+.el-textarea__inner {
+  height: 170px;
+}
+.reimg {
+  margin-right: 50px;
+}
+.btn {
+  padding: 5px;
 }
 </style>
