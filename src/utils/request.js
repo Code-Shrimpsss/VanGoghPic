@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '../store'
 import router from '@/router'
+import Vue from 'vue'
 const instance = axios.create({
   baseURL: 'http://192.168.177.129:8000/',
   // headers: {
@@ -36,15 +37,13 @@ instance.interceptors.response.use(
   },
   error => {
     // 判断是否过期
-    console.log(error);
-    alert(error.response.data.detail)
-    // $message.error("请求失败 (╯°Д°)╯︵ ┻━┻");
+    Vue.prototype.$message.error("响应失败 (╯°Д°)╯︵ ┻━┻");
     if (error.response && error.response.status === 404) {
       console.log('token 过期啦')
       // 1 清空 vuex 和 localStorage 中的数据
       store.commit('cleanTokenInfo')
       // 2 强制跳转到登录页
-      router.push('/')
+      // router.push('/')
       return Promise.reject(error)
     }
   })

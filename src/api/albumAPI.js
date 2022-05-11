@@ -1,5 +1,8 @@
 import request from '@/utils/request'
-
+let headers = {
+    // 请求头内Content-Type一定要是form-data格式
+    "Content-Type": "multipart/form-data",
+}
 // 获取所有图片类型的接口
 export const getAllAlbums = () => {
     return request.get("/albums/")
@@ -23,6 +26,10 @@ export const getSignAlbum = (pid) => {
 
 // 上传画册 
 // 参数 from(albumname, albumtype,is)
+// 个人信息修改
+export const createAlbum = (form) => {
+    return request.post('/createAlbum/', form, {headers})
+}
 
 
 // 修改画册

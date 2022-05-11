@@ -9,7 +9,8 @@
       ></el-button>
       <h1 class="headtxt">个人主页</h1>
     </div>
-    <div class="my">
+    <!--  -->
+    <div class="my" v-if="listdata">
       <div class="mianform">
         <div class="Pinfo">
           <h1>{{ listdata.username }}</h1>
@@ -26,17 +27,15 @@
               type="primary"
               >{{ item }}</el-button
             >
-            <!-- <el-button class="btn" type="success">{{ item }}</el-button>
-            <el-button class="btn" type="info">{{ item }}</el-button> -->
           </p>
-          <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
+          <!-- <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
           <div class="collectBox">
             <div v-for="item in likeUrls" :key="item">
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
             </div>
-          </div>
+          </div> -->
           <h3 class="el-icon-magic-stick">&nbsp;选言</h3>
           <div class="txtbox">
             {{ listdata.signature }}
@@ -56,72 +55,86 @@
           <button class="outLogin" @click="logout()">退出登录</button>
         </div>
       </div>
-
+      <!-- el-fade-in-linear -->
       <transition name="el-zoom-in-left">
         <div class="modifybox" v-show="Pshow">
           <h1 class="headone">修改用户信息</h1>
-          <div class="reinfo">
-            <h4>用户名</h4>
-            <el-input
-              class="topm"
-              placeholder="请输入要更改的用户名"
-              v-model="ruleFrom.rename"
-              maxlength="20"
-              :show-word-limit="true"
-            >
-              <i slot="prefix" class="el-input__icon el-icon-user-solid"></i>
-            </el-input>
-            <h4>爱好</h4>
-            <!-- <i>*&nbsp;最多为3个</i> -->
-            <el-select
-              class="topm"
-              v-model="ruleFrom.hobby"
-              multiple
-              filterable
-              allow-create
-              default-first-option
-              placeholder="可以自己输入喜好"
-              :multiple-limit="3"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item"
-                :value="item"
+          <div class="Tbox">
+            <div class="reinfo">
+              <h4>用户名</h4>
+              <el-input
+                class="topm"
+                placeholder="请输入要更改的用户名"
+                v-model="ruleFrom.rename"
+                maxlength="20"
+                :show-word-limit="true"
+                :rules="[
+                  {
+                    min: 6,
+                    max: 20,
+                    message: '长度在 6 到 20 个字符',
+                    trigger: 'blur',
+                  },
+                ]"
+                :validate-on-rule-change="true"
               >
-              </el-option>
-            </el-select>
-            <h4>选言</h4>
-            <el-input
-              class="textareaBox"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入内容"
-              v-model="listdata.pmessage"
-            >
-            </el-input>
-          </div>
-          <div class="reimg">
-            <h4 class="topm">修改头像</h4>
-            <el-upload
-              class="avatar-uploader"
-              :action="AvatarUrl"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- 选取文件后立即进行上传 :auto-upload="false" -->
-              <img v-if="urlImg" :src="urlImg" class="avatar" />
-              <i class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
-          </div>
-          <div class="footbox">
-            <el-button
-              class="subbtn"
-              type="primary"
-              :plain="true"
-              @click="submitForm(ruleFrom)"
-              >完成geng</el-button
-            >
+                <i slot="prefix" class="el-input__icon el-icon-user-solid"></i>
+              </el-input>
+              <h4>爱好</h4>
+              <!-- <i>*&nbsp;最多为3个</i> -->
+              <el-select
+                class="topm"
+                v-model="ruleFrom.rehobbys"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="可以自己输入喜好"
+                :multiple-limit="3"
+              >
+                <el-option v-for="item in options" :key="item" :value="item">
+                </el-option>
+              </el-select>
+              <h4>选言</h4>
+              <el-input
+                class="textareaBox"
+                type="textarea"
+                :autosize="{ minRows: 6, maxRows: 8 }"
+                placeholder="请输入内容"
+                v-model="ruleFrom.remessage"
+              >
+              </el-input>
+            </div>
+            <div class="reimg">
+              <h4 class="topm">修改头像</h4>
+              <el-upload
+                class="avatar-uploader"
+                :action="AvatarUrl"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+              >
+                <!-- 选取文件后立即进行上传 :auto-upload="false" -->
+                <img v-if="urlImg" :src="urlImg" class="avatar" />
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+              <div class="footbox">
+                <el-button
+                  class="subbtn"
+                  type="warning"
+                  :plain="true"
+                  @click="Pshow = !Pshow;"
+                  >取消修改</el-button
+                >
+                <el-button
+                  class="subbtn"
+                  type="primary"
+                  :plain="true"
+                  @click="submitForm(ruleFrom)"
+                  >完成geng</el-button
+                >
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -140,19 +153,18 @@ export default {
     return {
       // 更改信息的参数
       ruleFrom: {
+        username: this.$cookies.get("username"),
         rename: "",
-        rehobby: "",
+        rehobbys: "",
         reimg: "",
         remessage: "",
       },
-      urlImg : "",
+      urlImg: "",
       // 主要数据源
       likeUrls: ["https://lipsum.app/312x208/000/fff"],
       listdata: {},
       // 选项数据源
-      options: [ "风景" ,"城市" ,"自然" ,"人物" ,"动物" ,"其他" ],
-      // 是否显示修改信息
-      value1: [],
+      options: ["风景", "城市", "自然", "人物", "动物", "其他"],
       Pshow: false,
       AvatarUrl: "http://192.168.177.129:8000/updata/images",
     };
@@ -162,13 +174,12 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res, file) {
-      console.log(file.raw);
+      console.log(file);
       console.log(res);
       this.urlImg = URL.createObjectURL(file.raw);
-      this.ruleFrom.reimg = file.raw
-      // let binaryData = [];
-      // binaryData.push(file.raw);
-      // this.imageUrl= window.URL.createObjectURL(binaryData));
+      this.ruleFrom.reimg = res.authorImg;
+      // this.ruleFrom.reimg = file;
+      // console.log(this.ruleFrom.reimg);
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
@@ -183,21 +194,31 @@ export default {
       return isJPG && isLt2M;
     },
     // 提交修改
-    submitForm(val) {
-      const { data:res } = ReviseUser(val);
+    async submitForm(val) {
+      // this.$refs[val].validate((valid) => {
+      //   if (valid) {
+      //     alert("submit!");
+      //   } else {
+      //     console.log("error submit!!");
+      //     return false;
+      //   }
+      // });
+      const { data: res } = await ReviseUser(val);
       if (res.code === 200) {
+        console.log(res);
+        this.$cookies.set("username", res.data);
         this.$message.success("修改成功");
         this.Pshow = false;
-        this.getUserDate();
+        this.infoUser();
       } else {
         this.$message.error("修改失败");
       }
-    
     },
     logout() {
       // 1.删除cookies中的用户信息
       this.$cookies.remove("username");
       this.$cookies.remove("token");
+      this.$message.info("退出成功");
       this.$router.push("/");
     },
     // 显示用户数据
@@ -207,8 +228,13 @@ export default {
       this.listdata = res.data;
       // 将喜好通过<;>切割转换为数组 再截取前三位
       this.listdata.hobbys = res.data.hobby.split(";").slice(0, 3);
-      console.log(this.listdata.hobbys);
+      console.log(res.data);
+      // console.log(this.listdata.hobbys);
     },
+    clearFrom(val) {
+      this.ruleFrom = "";
+      Pshow = !Pshow;
+    }
   },
   created() {
     this.infoUser();
@@ -268,19 +294,19 @@ body,
   display: flex;
   justify-content: space-evenly;
   background-color: rgb(41, 45, 50);
-  // padding: 1% 0;
   .mianform,
   .modifybox {
     width: 35%;
     height: 24.4371rem;
     padding: 5%;
+    // padding-top: 3%;
     background-color: rgb(57, 58, 64);
     border-radius: 15px;
-    display: flex;
-    justify-content: space-between;
   }
   .mianform {
     animation: both;
+    display: flex;
+    justify-content: space-between;
     .Pinfo {
       position: relative;
       text-align: left;
@@ -326,7 +352,7 @@ body,
     }
   }
   .modifybox {
-    position: relative;
+    position: absolute;
     .reinfo {
       position: relative;
       text-align: left;
@@ -336,12 +362,12 @@ body,
       }
     }
     .footbox {
-      // position: absolute;
-      bottom: 90px;
-      left: 607px;
+      margin-top: 155px;
       .subbtn {
+        margin: 20px 0 0;
         width: 120px;
         height: 40px;
+        display: block;
       }
     }
   }
@@ -382,18 +408,25 @@ body,
   margin-top: 20px;
   padding: 10px;
 }
-.el-textarea__inner {
-  height: 170px;
-}
+// .el-textarea__inner {
+//   min-height: 100px;
+//   height: 170px;
+//   position: absolute;
+//   left: 20px;
+// }
 .reimg {
   margin-right: 50px;
 }
 .btn {
   padding: 5px;
 }
-.el-select-dropdown__item{
+.el-select-dropdown__item {
   text-align: center;
   margin: 0;
   padding: 0;
+}
+.Tbox {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

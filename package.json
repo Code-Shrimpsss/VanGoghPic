@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "prebuild": "",
+    "postbuild": ""
   },
   "dependencies": {
     "@authing/vue-ui-components": "^3.0.32",
@@ -14,7 +17,7 @@
     "element-ui": "^2.15.6",
     "vue": "^2.6.14",
     "vue-cookies": "^1.8.0",
-    "vue-router": "^3.5.1",
+    "vue-router": "^3.2.0",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0"
   },
@@ -32,5 +35,9 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "bin": {
+    "test": "./bin/serve.js",
+    "test2": "./bin/build.js"
+  }
 }

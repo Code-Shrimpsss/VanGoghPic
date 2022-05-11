@@ -7,6 +7,7 @@
           <img src="@/assets/logo.png" />
         </el-avatar>
       </a>
+
     </div>
 
     <!-- 未登录则进行注册或登录 -->
@@ -41,6 +42,7 @@
               maxlength="20"
               minlength="5"
               show-word-limit
+              @change="select_username"
             >
             </el-input>
 
@@ -174,7 +176,7 @@
             <!-- overlay left -->
 
             <div class="overlay_panel overlay_left_container">
-              <h2>welcome back!</h2>
+              <h2 class="HTitle">welcome back!</h2>
               <p>Continue to contribute your picture book</p>
 
               <button id="sign-in" @click="infoLogin()">登录</button>
@@ -183,7 +185,7 @@
             <!-- overlay right -->
 
             <div class="overlay_panel overlay_right_container">
-              <h2>hello collectors!</h2>
+              <h2 class="HTitle">hello collectors!</h2>
 
               <p>Looking forward to your joining this picture world</p>
 
@@ -201,6 +203,7 @@
 <script>
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
+import { getUserDate } from "@/api/userAPi";
 export default {
   data() {
     return {
@@ -263,25 +266,30 @@ export default {
     infoLogin() {
       this.Infoclass = false;
       (this.username = ""),
-        (this.password = ""),
-        (this.password2 = ""),
-        (this.phone = ""),
-        (this.codepic = ""), // 图形验证码
-        (this.message = ""), // 短信验证码
-        (this.error_name = false),
-        (this.error_password = false),
-        (this.error_check_password = false),
-        (this.error_phone = false),
-        (this.sms_code = ""),
-        (this.image_code = ""),
-        (this.error_sms_code = false);
+      (this.password = ""),
+      (this.password2 = ""),
+      (this.phone = ""),
+      (this.codepic = ""), // 图形验证码
+      (this.message = ""), // 短信验证码
+      (this.error_name = false),
+      (this.error_password = false),
+      (this.error_check_password = false),
+      (this.error_phone = false),
+      (this.sms_code = ""),
+      (this.image_code = ""),
+      (this.error_sms_code = false);
     },
     infoRegister() {
       this.Infoclass = true;
       this.username = "";
       this.password = "";
-      //   this.error_username = false;
-      //   this.error_pwd = false;
+      this.error_username = false;
+      this.error_pwd = false;
+    },
+    async imgUpdata() {
+      const { data: res } = await getUserDate(this.username);
+      this.author_img = res.data.author_img;
+      console.log(res);
     },
     // 提取地址栏中的查询字符串
     get_query_string(name) {
@@ -641,6 +649,10 @@ export default {
     // 页面一创建，就去cookie中取值
     this.username = this.$cookies.get("username");
     this.token = this.$cookies.get("token");
+    // if (this.username && this.token) {
+    //   this.is_login = true;
+    // }
+    this.imgUpdata();
   },
 };
 </script>
@@ -662,190 +674,64 @@ ul {
   display: flex;
 }
 
-.pic_code {
-  width: 40%;
-}
-
-.el-icon-warning {
-  color: red;
-}
-
-#warnings {
-  text-align: left;
-  color: #ff4b2b;
-}
-
-.get_msg_code {
-  width: 6.25rem;
-  height: 38px;
-  padding: 0;
-  border: 1px solid #c6c6c6;
-  color: #333;
-  background-color: #fff;
-  margin: 0px;
-}
-
-.el-dialog__body {
-  padding: 0;
-}
-
-.Edialog {
-  padding: 0;
-  h2 {
-    color: #333;
-  }
-}
-
-.headbox {
-  position: fixed;
-  z-index: 100;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  display: flex;
-  justify-content: space-around;
-  background-color: rgba(255, 255, 255, 0.083);
-  padding: 5px 0px;
-  height: 60px;
-
-  .leftHead {
-    position: relative;
-
-    .lefttxt {
-      text-align: center;
-      margin-top: 20px;
-      display: inline-block;
-      color: #fff;
-      font-family: "STXinwei";
-      a {
-        text-decoration: none;
-        color: #fff;
-      }
-    }
-  }
-
-  #dicon {
-    font-size: 25px;
-    margin: 0 2px;
-  }
-
-  .demo-type {
-    margin-top: 15px;
-    width: 130px;
-    i {
-      color: #fff;
-    }
-    .el-avatar {
-      position: relative;
-      right: -40px;
-      top: -35px;
-      margin-left: 10px;
-    }
-
-    .el-icon-takeaway-box {
-      font-size: 30px;
-    }
-  }
-}
-
-.elItem {
-  background-color: #333;
-}
-
-// --------
-
 body {
   display: flex;
-
   justify-content: center;
-
   align-items: center;
-
-  // height: 100vh;
-
-  // background-color: #f6f5f7;
 }
 
 h2 {
   margin-bottom: 10px;
-
   font-size: 32px;
-
   text-transform: capitalize;
 }
 
 .container {
   width: 100%;
-
   height: 480px;
-
   background-color: white;
-
-  // box-shadow: 0 14px 28px rgbawbo0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
-
-  border-radius: 10px;
-
+  border-radius: 10px;  // 圆角
   overflow: hidden;
 }
 
 .form-container {
   position: absolute;
-
   top: 0;
-
   width: 50%;
-
   height: 100%;
-
   background-color: white;
-
   transition: all 0.6s ease-in-out;
 }
 
 .form {
   display: flex;
-
   flex-direction: column;
-
   justify-content: center;
-
   align-items: center;
-
   height: 100%;
-
-  // width: 100%;
-
   padding: 0 50px;
+}
+.HTitle{
+  color: #fff;
 }
 
 .demo-ruleForm {
   height: 100%;
-
-  // padding: 0 50px;
 }
 
 input {
   width: 100%;
-
   margin: 8px 0;
-
   padding: 12px;
-
   background-color: #eee;
-
   border: none;
 }
 
 .codePicBox {
   width: 100%;
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   .el-input {
     width: 50%;
   }
@@ -856,15 +742,10 @@ input {
 
 .forget-password {
   display: inline-block;
-
   height: 20px;
-
   text-decoration: none;
-
   color: #bbb;
-
   text-transform: capitalize;
-
   font-size: 12px;
 }
 
@@ -981,6 +862,40 @@ button:active {
 .el-menu li {
   font-size: 18px;
   font-weight: 700;
+}
+
+.pic_code {
+  width: 40%;
+}
+
+.el-icon-warning {
+  color: red;
+}
+
+#warnings {
+  text-align: left;
+  color: #ff4b2b;
+}
+
+.get_msg_code {
+  width: 6.25rem;
+  height: 38px;
+  padding: 0;
+  border: 1px solid #c6c6c6;
+  color: #333;
+  background-color: #fff;
+  margin: 0px;
+}
+
+.el-dialog__body {
+  padding: 0;
+}
+
+.Edialog {
+  padding: 0;
+  h2 {
+    color: #333;
+  }
 }
 </style>
 

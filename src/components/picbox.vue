@@ -85,7 +85,8 @@ export default {
   align-items: center;
   justify-content: flex-start;
   .el-img {
-    width: 275px;
+    // width: 275px;
+    width: 280px;
     height: 265px;
     background-repeat: no-repeat;
     margin: 0 3px;

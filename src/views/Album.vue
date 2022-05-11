@@ -35,8 +35,6 @@
               circle
             ></el-button>
           </div>
-          <el-drawer title="评论" :visible.sync="drawer" class="Commentbox">
-          </el-drawer>
         </div>
         <div class="funRight">
           <p>{{ listData.expostitory }}</p>
@@ -59,6 +57,11 @@
         ></el-image>
       </div>
     </main>
+    <el-drawer
+      title="评论"
+      :visible.sync="drawer"
+      class="Commentbox"
+    ></el-drawer>
     <footers class="footers"></footers>
   </div>
 </template>
@@ -110,9 +113,10 @@ export default {
     async getSignAlbums(pid) {
       const { data: res } = await getSignAlbum(pid);
       let dataD = res.datalist;
+      console.log(dataD);
       if (dataD) {
         dataD.img_list = dataD.img_list.split(";");
-        this.listData = dataD
+        this.listData = dataD;
       }
     },
   },

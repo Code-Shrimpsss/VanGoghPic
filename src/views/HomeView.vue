@@ -45,9 +45,16 @@ export default {
   methods: {
     async getUserPro() {
       const { data: res } = await getUser();
-      this.counts.UserCount = res.counts[0];
-      this.counts.FavCount = res.counts[1];
-      this.counts.picCount = res.counts[2];
+      // this.counts.UserCount = res.counts[0];
+      // this.counts.FavCount = res.counts[1];
+      // this.counts.picCount = res.counts[2];
+      res.counts.map((item, index) => {
+        this.counts.UserCount = index === 0 ? item : this.counts.UserCount;
+        this.counts.FavCount = index === 1 ? item : this.counts.FavCount;
+        this.counts.picCount =  index === 2 ? item : this.counts.picCount;
+        console.log(item);
+      });
+      // console.log(this.counts);
     },
   },
   created() {
@@ -93,7 +100,6 @@ h2 {
       }
     }
     .FeaturesBox {
-          // margin-left: 100px;
       width: 100%;
       font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
         "Lucida Sans Unicode", Geneva, Verdana, sans-serif;

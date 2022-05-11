@@ -21,7 +21,7 @@
       >
     </el-menu>
     <div class="demo-type">
-      <a href="/favorites"><i class="el-icon-takeaway-box"></i></a>
+      <a href="/favorites"><i class="el-icon-takeaway-box"></i> </a>
       <Login></Login>
     </div>
   </div>
@@ -187,6 +187,7 @@ ul {
     }
 
     .el-icon-takeaway-box {
+      margin-right: 10px;
       font-size: 30px;
     }
   }
