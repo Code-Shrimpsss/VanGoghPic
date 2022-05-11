@@ -93,6 +93,7 @@ h2 {
       }
     }
     .FeaturesBox {
+          // margin-left: 100px;
       width: 100%;
       font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
         "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
@@ -118,6 +119,33 @@ h2 {
         }
       }
     }
+  }
+}
+// @media all and (max-width: 700px) {
+
+// }
+@media screen and (max-width: 600px) {
+  .home {
+    padding: 80px 0px;
+  }
+  .home div {
+    width: 0;
+  }
+  .subjectTxt {
+    position: absolute;
+  }
+  h1{
+    font-size: 20px;
+  }
+  .FeaturesBox{
+    position: static;
+  }
+  // .Banner{
+  //     display:none ;
+  //     margin-top: 0;
+  // }
+  .Banner img {
+    width: 250px;
   }
 }
 </style>

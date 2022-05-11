@@ -85,9 +85,8 @@
             >
               <el-option
                 v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.label"
+                :key="item"
+                :value="item"
               >
               </el-option>
             </el-select>
@@ -146,48 +145,16 @@ export default {
         reimg: "",
         remessage: "",
       },
-      urlImg : "http://localhost:3000/upload/",
+      urlImg : "",
       // 主要数据源
       likeUrls: ["https://lipsum.app/312x208/000/fff"],
       listdata: {},
       // 选项数据源
-      options: [
-        {
-          value: "选项1",
-          label: "风景",
-        },
-        {
-          value: "选项2",
-          label: "城市",
-        },
-        {
-          value: "选项3",
-          label: "宇宙",
-        },
-        {
-          value: "选项4",
-          label: "狗",
-        },
-        {
-          value: "选项5",
-          label: "美食",
-        },
-        {
-          value: "选项6",
-          label: "游戏",
-        },
-        {
-          value: "选项7",
-          label: "梵高",
-        },
-        {
-          value: "选项8",
-          label: "配件",
-        },
-      ],
+      options: [ "风景" ,"城市" ,"自然" ,"人物" ,"动物" ,"其他" ],
+      // 是否显示修改信息
       value1: [],
       Pshow: false,
-      AvatarUrl: "http://192.168.177.129:8000/updata/images/",
+      AvatarUrl: "http://192.168.177.129:8000/updata/images",
     };
   },
   components: {
@@ -225,19 +192,7 @@ export default {
       } else {
         this.$message.error("修改失败");
       }
-      
-      // if (val) {
-      //   this.Pshow = !this.Pshow;
-      //   this.$message({
-      //     message: "修改成功",
-      //     type: "success",
-      //   });
-      // } else {
-      //   this.$message({
-      //     message: "修改失败",
-      //     type: "warning",
-      //   });
-      // }
+    
     },
     logout() {
       // 1.删除cookies中的用户信息
@@ -435,5 +390,10 @@ body,
 }
 .btn {
   padding: 5px;
+}
+.el-select-dropdown__item{
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
 </style>

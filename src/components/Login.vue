@@ -161,7 +161,7 @@
               {{ error_pwd_message }}
             </div>
             <a href="#" class="forget-password">forget your password</a>
-            <button class="signIn" @click="on_submit_login()" :plain="true">
+            <button class="signIn" @click="on_login()" :plain="true">
               登录
             </button>
           </div>
@@ -252,10 +252,10 @@ export default {
     this.generate_image_code();
   },
   computed: {
-    ...mapState(["user", "tokenInfo"]),
+    // ...mapState(["user", "tokenInfo"]),
   },
   methods: {
-    ...mapMutations(["updateTokenInfo"]),
+    // ...mapMutations(["updateTokenInfo"]),
     errorHandler() {
       return true;
     },
@@ -336,7 +336,6 @@ export default {
             withCredentials: true,
           })
           .then((response) => {
-            console.log(response);
             console.log(response.data);
             if (response.data.count > 0) {
               this.error_name_message = "用户名已存在";
@@ -350,6 +349,16 @@ export default {
           });
       }
     },
+    select_username () {
+      var re = /^[a-zA-Z0-9_-]{5,20}$/;
+      var re2 = /^[0-9]+$/;
+      if (re.test(this.username) && !re2.test(this.username)) {
+        this.error_name = false;
+      } else {
+        this.error_name_message = "请输入5-20个字符的用户名且不能为纯数字";
+        this.error_name = true;
+      }
+      },
     check_pwd() {
       var len = this.password.length;
       if (len < 8 || len > 20) {
@@ -447,7 +456,6 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.data.code == 0) {
-            console.log("duanxin ok");
             // 表示后端发送短信成功
             // 倒计时60秒，60秒后允许用户再次点击发送短信验证码的按钮
             var num = 60;
@@ -471,7 +479,6 @@ export default {
               60
             );
           } else {
-            console.log("duanxin error");
             this.error_sms_code_message = response.data.errmsg;
             this.error_sms_code = true;
           }
@@ -568,10 +575,12 @@ export default {
       }
     },
     // 表单提交
-    on_submit_login() {
+    on_login() {
       this.check_username();
       this.check_pwd();
-      if (this.error_username == false && this.error_pwd == false) {
+      console.log(this.error_name);
+      console.log(this.error_pwd);
+      if (this.error_name == false && this.error_pwd == false) {
         axios
           .post(
             this.$host + "/login/",
@@ -584,32 +593,33 @@ export default {
               responseType: "json",
               // 发送请求的时候, 携带上cookie
               withCredentials: true,
-              // crossDomain: true
+              crossDomain: true
             }
           )
           .then((response) => {
-            if (response.data.code == 0) {
+            if (response.data.code == 200) {
               // 跳转页面
-              console.log(111);
-              var return_url = this.get_query_string("next");
-              if (!return_url) {
+              // var return_url = this.get_query_string("next");
+              // if (!return_url) {
                 let t = response.data.data;
                 this.$cookies.set("token", t.token);
                 this.$cookies.set("username", t.username);
                 this.username =t.username;
                 this.token = t.token;
-                console.log(2222);
                 console.log(t);
                 this.$message({
                   message: ` ${response.data.username} 欢迎回家(●'◡'●) `,
                   type: "success",
                 });
                 this.dialogVisible = false;
-                return_url = "/";
-              }
+                // return_url = "/";
+              // }
               // location.href = return_url;
             } else if (response.data.code == 400) {
               this.error_pwd_message = "用户名或密码错误";
+              this.error_pwd = true;
+            } else {
+              this.error_pwd_message = "未知错误";
               this.error_pwd = true;
             }
           })
@@ -622,6 +632,8 @@ export default {
             }
             this.error_pwd = true;
           });
+      }else{
+        console.log(this.error_username);
       }
     },
   },

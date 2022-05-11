@@ -54,6 +54,13 @@ export default {
   mounted() {
     this.childByValue();
   },
+  created () {
+    let token = this.$cookies.get("token");
+    if (token == null) {
+      this.$message.error("请先登录 ( •̀ ω •́ )y ");
+      this.$router.push("/");
+    }
+  }
 };
 </script>
 

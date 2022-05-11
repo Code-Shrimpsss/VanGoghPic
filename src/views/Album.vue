@@ -167,7 +167,7 @@ body,
   justify-content: flex-start;
   align-content: center;
   background-color: rgb(36, 37, 39);
-
+  position: fixed;
   .rebtn {
     width: 60px;
     height: 60px;
@@ -190,9 +190,12 @@ main {
   color: #dbdbdb;
 }
 .funbox {
-  width: 100%;
-  height: 20%;
+  margin-top: 100px;
+  width: 500px;
+  position: fixed;
+  z-index: 2;
   padding: 20px 3%;
+  width: 30%;
   color: rgb(232, 232, 232);
   .funLeft {
     display: flex;
@@ -215,7 +218,10 @@ main {
 }
 .mainbox {
   // height: 600px;
+  margin-top: 120px;
   padding: 0px 80px;
+  width: 60%;
+  margin-left: 30%;
 }
 .liImg {
   margin: 5px 5px 0px;

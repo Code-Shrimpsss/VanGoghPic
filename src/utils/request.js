@@ -3,9 +3,9 @@ import store from '../store'
 import router from '@/router'
 const instance = axios.create({
   baseURL: 'http://192.168.177.129:8000/',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-  }
+  // headers: {
+  //   'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  // }
 })
 
 // 添加请求拦截器

@@ -1,7 +1,7 @@
 <template>
   <div class="headbox">
     <div class="leftHead">
-      <!-- <i id="dicon" class="el-icon-moon"></i> -->
+      <i id="dicon" class="el-icon-moon"></i>
       <h3 class="lefttxt"><a href="/">Van GoghPic</a></h3>
     </div>
     <!-- 主要导航功能块 -->
@@ -163,10 +163,9 @@ ul {
   }
 
   #dicon {
-    // color: #fff;
-
+    color: #fff;
+    display: none;
     font-size: 25px;
-
     margin: 0 2px;
   }
 
@@ -196,240 +195,10 @@ ul {
 .elItem {
   background-color: #333;
 }
-
-// --------
-
-body {
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  // height: 100vh;
-
-  // background-color: #f6f5f7;
-}
-
-h2 {
-  margin-bottom: 10px;
-
-  font-size: 32px;
-
-  text-transform: capitalize;
-}
-
-.container {
-  width: 100%;
-
-  height: 480px;
-
-  background-color: white;
-
-  // box-shadow: 0 14px 28px rgbawbo0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
-
-  border-radius: 10px;
-
-  overflow: hidden;
-}
-
-.form-container {
-  position: absolute;
-
-  top: 0;
-
-  width: 50%;
-
-  height: 100%;
-
-  background-color: white;
-
-  transition: all 0.6s ease-in-out;
-}
-
-.form {
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-
-  align-items: center;
-
-  height: 100%;
-
-  // width: 100%;
-
-  padding: 0 50px;
-}
-
-.demo-ruleForm {
-  height: 100%;
-
-  // padding: 0 50px;
-}
-
-input {
-  width: 100%;
-
-  margin: 8px 0;
-
-  padding: 12px;
-
-  background-color: #eee;
-
-  border: none;
-}
-
-.codePicBox {
-  width: 100%;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  .el-input {
-    width: 50%;
+@media screen and (max-width: 600px) {
+  #dicon{
+    display: inline-block;
   }
-  button {
-    width: 120px;
-  }
-}
-
-.forget-password {
-  display: inline-block;
-
-  height: 20px;
-
-  text-decoration: none;
-
-  color: #bbb;
-
-  text-transform: capitalize;
-
-  font-size: 12px;
-}
-
-.forget-password:hover {
-  color: lightslategray;
-
-  border-bottom: 2px solid #ff4b2b;
-}
-
-button {
-  background: #ff4b2b;
-  padding: 10px 50px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  text-transform: uppercase;
-  color: white;
-  margin-top: 10px;
-  outline: none;
-  transition: transform 80;
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-.overlay_container {
-  position: absolute;
-
-  top: 0;
-
-  width: 50%;
-
-  height: 100%;
-
-  z-index: 100;
-
-  right: 0;
-
-  overflow: hidden;
-
-  transition: all 0.6s ease-in-out;
-}
-
-.overlay {
-  position: absolute;
-  width: 200%;
-  height: 100%;
-  left: -100%;
-  // background-color: #ff4b2b;
-  background-image: url("../assets/vangogh1.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.overlay_panel {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-  height: 100%;
-  color: white;
-  // padding: 0 40px;
-  background-image: url("../assets/vangogh.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  h2 {
-    color: #fff;
-  }
-}
-
-.overlay_panel button {
-  background-color: transparent;
-
-  border: 1px solid white;
-}
-
-.overlay_panel p {
-  font-size: 18px;
-  // color: rgb(230, 230, 230);
-  margin: 10px 0 15px 0;
-}
-
-.overlay_right_container {
-  right: 0;
-}
-
-.container.active .sign-up-container {
-  transform: translateX(100%);
-
-  z-index: 5;
-}
-
-.container.active .sign-in-container {
-  transform: translateX(100%);
-}
-
-.container.active .overlay_container {
-  transform: translateX(-100%);
-}
-
-.container.active .overlay {
-  transform: translateX(50%);
-}
-.singup {
-  padding: 10px 50px;
-  border: 1px solid transparent;
-
-  border-radius: 20px;
-
-  text-transform: uppercase;
-
-  color: white;
-
-  margin-top: 10px;
-}
-
-.el-menu li {
-  font-size: 18px;
-  font-weight: 700;
 }
 </style>
 
