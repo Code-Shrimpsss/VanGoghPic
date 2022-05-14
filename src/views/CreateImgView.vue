@@ -141,22 +141,19 @@ export default {
     },
     // 画册创建
     async getAlbumFrom() {
-      this.form.resource == "公开画册"
-        ? (this.form.resource = true)
-        : (this.form.resource = false);
-      // this.form.imgLists = this.form.imgLists.join(";");
       this.form["defaultImg"] = this.form.imgLists[0];
-      console.log(typeof this.form.imgLists);
+      // console.log(typeof this.form.imgLists);
       // typeof this.form.imgLists == String
       //   ? this.form.imgLists
       //   : (this.form.imgLists = this.form.imgLists.join(";"));
-      this.form.imgLists = this.form.imgLists.join(";");
+      // this.form.imgLists = this.form.imgLists.join(";");
       console.log(this.form.imgLists);
       console.log(this.form["defaultImg"]);
-      console.log(this.form);
       const { data: res } = await createAlbum(this.form);
       if (res.code === 200) {
         this.$message.success("创建成功");
+        // this.$router.push(`album/${res.data}`); 
+        this.$router.push({path: `/great`, query: {id: res.data}}); 
       } else {
         this.$message.error(res.errmsg);
       }

@@ -5,7 +5,7 @@
         type="primary"
         class="rebtn"
         icon="el-icon-back"
-        @click="$router.back(-1)"
+        @click="$router.push('/')"
       ></el-button>
       <h1 class="headtxt">个人主页</h1>
     </div>
@@ -28,17 +28,19 @@
               >{{ item }}</el-button
             >
           </p>
-          <!-- <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
+          <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
           <div class="collectBox">
             <div v-for="item in likeUrls" :key="item">
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
               <a><img class="likebox" :src="item" alt="" /></a>
             </div>
-          </div> -->
-          <h3 class="el-icon-magic-stick">&nbsp;选言</h3>
+          </div>
+          <h3 class="el-icon-magic-stick">&nbsp;个性签名</h3>
           <div class="txtbox">
-            {{ listdata.signature }}
+            <span v-if="listdata.signature">{{ listdata.signature }}</span>
+            <span v-else> 伟大的人从来不缺个性签名... </span>
+        
           </div>
         </div>
         <div>
@@ -178,8 +180,6 @@ export default {
       console.log(res);
       this.urlImg = URL.createObjectURL(file.raw);
       this.ruleFrom.reimg = res.authorImg;
-      // this.ruleFrom.reimg = file;
-      // console.log(this.ruleFrom.reimg);
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
@@ -195,14 +195,7 @@ export default {
     },
     // 提交修改
     async submitForm(val) {
-      // this.$refs[val].validate((valid) => {
-      //   if (valid) {
-      //     alert("submit!");
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      console.log(this.ruleFrom.rehobbys);
       const { data: res } = await ReviseUser(val);
       if (res.code === 200) {
         console.log(res);
@@ -226,9 +219,11 @@ export default {
       let user = this.$cookies.get("username");
       const { data: res } = await getUserDate(user);
       this.listdata = res.data;
+      console.log(this.listdata);
       // 将喜好通过<;>切割转换为数组 再截取前三位
-      this.listdata.hobbys = res.data.hobby.split(";").slice(0, 3);
-      console.log(res.data);
+      if(res.data.hobby){
+        this.listdata.hobbys = res.data.hobby.split(";").slice(0, 3);
+      }
       // console.log(this.listdata.hobbys);
     },
     clearFrom(val) {

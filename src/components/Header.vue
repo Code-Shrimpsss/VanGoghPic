@@ -15,12 +15,13 @@
       active-text-color="#ffd04b"
     >
       <el-menu-item class="el-icon-s-home" index="/">主页</el-menu-item>
-      <el-menu-item class="el-icon-menu" index="/about">类型</el-menu-item>
+      <el-menu-item class="el-icon-menu" index="/pic">类型</el-menu-item>
       <el-menu-item class="el-icon-s-management" index="/album"
         >画册</el-menu-item
       >
     </el-menu>
     <div class="demo-type">
+      <a href="/updataimg"><i class="el-icon-upload"></i></a>
       <a href="/favorites"><i class="el-icon-takeaway-box"></i> </a>
       <Login></Login>
     </div>
@@ -80,15 +81,15 @@ ul {
   display: flex;
 }
 
-@media screen and (max-width: 400px) {
-  .headbox {
-    padding: 0 0px;
+// @media screen and (max-width: 400px) {
+//   .headbox {
+//     padding: 0 0px;
 
-    display: flex;
+//     display: flex;
 
-    justify-content: space-evenly;
-  }
-}
+//     justify-content: space-evenly;
+//   }
+// }
 
 .pic_code {
   width: 40%;
@@ -172,22 +173,20 @@ ul {
   .demo-type {
     margin-top: 15px;
     width: 130px;
+    display: flex;
     i {
       // color: #bbb;
       color: #fff;
     }
     .el-avatar {
       position: relative;
-
-      right: -40px;
-
-      top: -35px;
-
-      margin-left: 10px;
+      // margin-left: 10px;
+      bottom: 7px;
     }
 
-    .el-icon-takeaway-box {
-      margin-right: 10px;
+    .el-icon-takeaway-box,
+    .el-icon-upload {
+      margin-right: 20px;
       font-size: 30px;
     }
   }
@@ -196,10 +195,10 @@ ul {
 .elItem {
   background-color: #333;
 }
-@media screen and (max-width: 600px) {
-  #dicon{
-    display: inline-block;
-  }
-}
+// @media screen and (max-width: 600px) {
+//   #dicon{
+//     display: inline-block;
+//   }
+// }
 </style>
 

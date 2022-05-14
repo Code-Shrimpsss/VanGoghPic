@@ -1,13 +1,31 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view />
+      <router-view v-if="isShow"/>
     </keep-alive>
   </div>
 </template>
 <script>
 export default {
-  name: "App"
+  name: "App",
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
+  data () {
+    return {
+      isShow:true
+    }
+  },
+  methods:{
+    reload(){
+      this.isShow=false;
+      this.$nextTick(()=>{
+        this.isShow=true
+      })
+    }
+  }
 };
 </script>
 

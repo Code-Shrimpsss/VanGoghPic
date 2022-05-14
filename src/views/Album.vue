@@ -34,6 +34,12 @@
               :icon="star"
               circle
             ></el-button>
+            <!-- <el-button
+              :plain="true"
+              class="starBtn"
+              :icon="setting"
+              circle
+            ></el-button> -->
           </div>
         </div>
         <div class="funRight">
@@ -57,25 +63,39 @@
         ></el-image>
       </div>
     </main>
-    <el-drawer
-      title="评论"
-      :visible.sync="drawer"
-      class="Commentbox"
-    ></el-drawer>
+    <el-drawer title="留言" :visible.sync="drawer" class="Commentbox">
+      <li class="elTxt">
+        <div class="ldiv">
+          <img
+            src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcolafile.cn%2Fuploads%2Fallimg%2F20201002a01%2F14331TH6_0.jpg&refer=http%3A%2F%2Fcolafile.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1655120146&t=2dec0c9d57065cfbcf065636c5ba741a"
+            alt=""
+            style=""
+          />
+        </div>
+        <div class="rdiv">
+          <p>哇塞~ 真不戳</p>
+          <div>
+            <span>2022 - 5 - 5</span>
+          </div>
+        </div>
+      </li>
+    </el-drawer>
     <footers class="footers"></footers>
   </div>
 </template>
 
 <script>
 import footers from "../components/Footer.vue";
-import { getSignAlbum } from "@/api/albumAPI";
+import { getSignAlbum, getFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
       drawer: false,
       star: "el-icon-star-off",
+      setting: "el-icon-setting",
       listData: "",
       tid: this.$route.params.id,
+      islike: false,
     };
   },
   components: {
@@ -84,40 +104,59 @@ export default {
   methods: {
     // 切换收藏按钮
     stars() {
-      if (this.listData.islike) {
+      if (this.islike == false) {
         this.star = "el-icon-star-on";
-        this.listData.islike = false;
         this.$message({
           message: "收藏成功 (●'◡'●)",
           type: "success",
         });
+        this.islike = true;
+        this.addFav();
       } else {
         this.star = "el-icon-star-off";
-        this.listData.islike = true;
         this.$message({
           message: "取消收藏 ᓚᘏᗢ",
           type: "warning",
         });
+        this.islike = false;
       }
-      console.log(this.listData.islike);
+        console.log(this.islike);
+
     },
     // 首次加载时的收藏按钮
     infoStar() {
-      if (this.listData.islike) {
+      if (this.islike == true) {
         this.star = "el-icon-star-on";
       } else {
         this.star = "el-icon-star-off";
       }
     },
+    // 收藏
+    async addFav() {
+      let user_id = this.$cookies.get("user_id");
+      let { data: res } = await getFavorites({
+        user_id,
+        albunm_id: this.tid,
+        islike: this.islike,
+      });
+      console.log(res);
+    },
+    // 取消收藏
     // 画册加载
     async getSignAlbums(pid) {
+      if (pid == void 0) {
+        return;
+      }
       const { data: res } = await getSignAlbum(pid);
       let dataD = res.datalist;
-      console.log(dataD);
       if (dataD) {
-        dataD.img_list = dataD.img_list.split(";");
+        dataD.img_list = dataD.img_list.split(";").map((item, index) => {
+          return "http://192.168.177.129:8888/" + item;
+        });
         this.listData = dataD;
       }
+
+      // console.log(this.listData.img_list);
     },
   },
   created() {
@@ -129,7 +168,6 @@ export default {
   watch: {
     $route(to, from) {
       if (typeof to.params.id != NaN) {
-        console.log("route-", to.params.id);
         this.getSignAlbums(to.params.id);
       }
     },
@@ -238,5 +276,31 @@ main {
 .createTime {
   margin-top: 30px;
   font-size: 18px;
+}
+.elTxt {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 20px;
+  .ldiv {
+    width: 20%;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  .rdiv {
+    width: 70%;
+    text-align: left;
+    p {
+      font-size: 16px;
+    }
+    div {
+      text-align: right;
+      span {
+        font-size: 10px;
+        color: whitesmoke;
+      }
+    }
+  }
 }
 </style>

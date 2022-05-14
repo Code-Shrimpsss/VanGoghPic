@@ -12,16 +12,19 @@ const routes = [
     component: MainView,
     children: [
       {
+        // 主页
         path: '/',
         name: 'home',
         component: HomeView
       },
       {
-        path: '/about',
-        name: 'about',
-        component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+        // 图片页
+        path: '/pic',
+        name: 'pic',
+        component: () => import(/* webpackChunkName: "pic" */ '../views/PicView.vue')
       },
       {
+        // 画册页
         path: '/album',
         name: 'album',
         component: () => import(/* webpackChunkName: "phone" */ '../views/AlbumView.vue')
@@ -29,17 +32,19 @@ const routes = [
     ]
   },
   {
+    // 个人主页
     path: '/my',
     name: 'my',
     component: () => import(/* webpackChunkName: "phone" */ '../views/MyView.vue')
   },
   {
+    // 收藏页
     path: '/favorites',
     name: 'favorites',
-    component: () => import(/* webpackChunkName: "favorites" */ '../views/Favorites.vue'),
+    component: () => import(/* webpackChunkName: "favorites" */ '../views/FavoritesView.vue'),
   },
   {
-    // 搜索结果页
+    // 画册详情页
     path: '/album/:id',
     component: AlbumView,
     name: 'album',
@@ -50,6 +55,18 @@ const routes = [
     path: '/createimg',
     name: 'createimg',
     component: () => import(/* webpackChunkName: "createImg" */ '../views/CreateImgView'),
+  },
+  {
+    // 上传图片页
+    path: '/updataimg',
+    name: 'updataimg',
+    component: () => import(/* webpackChunkName: "updataimg" */ '../views/UpdataImgView'),
+  },
+  {
+    // 上传图片页
+    path: '/great',
+    name: 'great',
+    component: () => import(/* webpackChunkName: "great" */ '../views/GreatView'),
   },
   {
     // 404页面

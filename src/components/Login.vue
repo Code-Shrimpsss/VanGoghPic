@@ -7,7 +7,6 @@
           <img src="@/assets/logo.png" />
         </el-avatar>
       </a>
-
     </div>
 
     <!-- 未登录则进行注册或登录 -->
@@ -229,7 +228,7 @@ export default {
       error_check_password: false,
       error_phone: false,
       error_sms_code: false,
-      error_name_message: "",
+      error_name_message: "账号输入错误",
       error_phone_message: "请输入手机号码",
       error_sms_code_message: "",
       error_image_code: "",
@@ -242,6 +241,7 @@ export default {
       remember: false,
     };
   },
+  inject: ["reload"],
   props: {
     newshow: {
       type: Boolean,
@@ -258,6 +258,11 @@ export default {
     // ...mapState(["user", "tokenInfo"]),
   },
   methods: {
+    update() {
+      console.log("🚀 ~ file: Login.vue ~ line 262 ~ pageUpdate ~ pageUpdate");
+      this.reload();
+      console.log("刷新页面");
+    },
     // ...mapMutations(["updateTokenInfo"]),
     errorHandler() {
       return true;
@@ -266,18 +271,18 @@ export default {
     infoLogin() {
       this.Infoclass = false;
       (this.username = ""),
-      (this.password = ""),
-      (this.password2 = ""),
-      (this.phone = ""),
-      (this.codepic = ""), // 图形验证码
-      (this.message = ""), // 短信验证码
-      (this.error_name = false),
-      (this.error_password = false),
-      (this.error_check_password = false),
-      (this.error_phone = false),
-      (this.sms_code = ""),
-      (this.image_code = ""),
-      (this.error_sms_code = false);
+        (this.password = ""),
+        (this.password2 = ""),
+        (this.phone = ""),
+        (this.codepic = ""), // 图形验证码
+        (this.message = ""), // 短信验证码
+        (this.error_name = false),
+        (this.error_password = false),
+        (this.error_check_password = false),
+        (this.error_phone = false),
+        (this.sms_code = ""),
+        (this.image_code = ""),
+        (this.error_sms_code = false);
     },
     infoRegister() {
       this.Infoclass = true;
@@ -287,9 +292,11 @@ export default {
       this.error_pwd = false;
     },
     async imgUpdata() {
-      const { data: res } = await getUserDate(this.username);
-      this.author_img = res.data.author_img;
-      console.log(res);
+      if (this.username) {
+        const { data: res } = await getUserDate(this.username);
+        this.author_img = res.data.author_img;
+        console.log(res);
+      }
     },
     // 提取地址栏中的查询字符串
     get_query_string(name) {
@@ -357,7 +364,7 @@ export default {
           });
       }
     },
-    select_username () {
+    select_username() {
       var re = /^[a-zA-Z0-9_-]{5,20}$/;
       var re2 = /^[0-9]+$/;
       if (re.test(this.username) && !re2.test(this.username)) {
@@ -366,7 +373,7 @@ export default {
         this.error_name_message = "请输入5-20个字符的用户名且不能为纯数字";
         this.error_name = true;
       }
-      },
+    },
     check_pwd() {
       var len = this.password.length;
       if (len < 8 || len > 20) {
@@ -391,10 +398,8 @@ export default {
         this.error_phone_message = "您输入的手机号格式不正确";
         this.error_phone = true;
       }
-
       if (this.error_phone == false) {
         var url = this.$host + "/mobiles/" + this.phone + "/count/";
-
         axios
           .get(url, {
             responseType: "json",
@@ -406,10 +411,8 @@ export default {
               this.error_phone = true;
             } else {
               this.error_phone = false;
-              console.log(321);
             }
           })
-
           .catch((error) => {
             console.log(error.response);
           });
@@ -537,16 +540,18 @@ export default {
 
           .then((response) => {
             if (response.data.code == 0) {
+              this.SaveUser(response.data.data);
               this.$message({
                 message: "注册成功 (〃￣︶￣)人(￣︶￣〃) ",
                 type: "success",
               });
               this.dialogVisible = false;
               location.href = "/";
+              this.imgUpdata();
             }
 
             if (response.data.code == 400) {
-              alert(response.data.errmsg);
+              this.$message.error(response.data.errmsg);
             }
           })
 
@@ -569,9 +574,9 @@ export default {
     // 检查数据
     check_username_login: function () {
       if (!this.username) {
-        this.error_username = true;
+        this.error_name = true;
       } else {
-        this.error_username = false;
+        this.error_name = false;
       }
     },
     check_pwd_login: function () {
@@ -588,6 +593,7 @@ export default {
       this.check_pwd();
       console.log(this.error_name);
       console.log(this.error_pwd);
+      this.error_name = false;
       if (this.error_name == false && this.error_pwd == false) {
         axios
           .post(
@@ -601,30 +607,23 @@ export default {
               responseType: "json",
               // 发送请求的时候, 携带上cookie
               withCredentials: true,
-              crossDomain: true
+              crossDomain: true,
             }
           )
           .then((response) => {
             if (response.data.code == 200) {
               // 跳转页面
-              // var return_url = this.get_query_string("next");
-              // if (!return_url) {
-                let t = response.data.data;
-                this.$cookies.set("token", t.token);
-                this.$cookies.set("username", t.username);
-                this.username =t.username;
-                this.token = t.token;
-                console.log(t);
+              this.SaveUser(response.data.data);
+              if (this.token) {
+                this.dialogVisible = false;
                 this.$message({
-                  message: ` ${response.data.username} 欢迎回家(●'◡'●) `,
+                  message: ` ${this.username} 欢迎回家(●'◡'●) `,
                   type: "success",
                 });
-                this.dialogVisible = false;
-                // return_url = "/";
-              // }
-              // location.href = return_url;
+                this.imgUpdata();
+              }
             } else if (response.data.code == 400) {
-              this.error_pwd_message = "用户名或密码错误";
+              this.error_pwd_message = response.data.errmsg;
               this.error_pwd = true;
             } else {
               this.error_pwd_message = "未知错误";
@@ -640,9 +639,16 @@ export default {
             }
             this.error_pwd = true;
           });
-      }else{
+      } else {
         console.log(this.error_username);
       }
+    },
+    SaveUser(t) {
+      this.$cookies.set("token", t.token);
+      this.$cookies.set("username", t.username);
+      this.$cookies.set("user_id", t.id);
+      this.username = t.username;
+      this.token = t.token;
     },
   },
   created() {
@@ -690,7 +696,7 @@ h2 {
   width: 100%;
   height: 480px;
   background-color: white;
-  border-radius: 10px;  // 圆角
+  border-radius: 10px; // 圆角
   overflow: hidden;
 }
 
@@ -711,7 +717,7 @@ h2 {
   height: 100%;
   padding: 0 50px;
 }
-.HTitle{
+.HTitle {
   color: #fff;
 }
 

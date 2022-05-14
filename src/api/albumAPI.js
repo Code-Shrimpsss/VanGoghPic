@@ -26,10 +26,15 @@ export const getSignAlbum = (pid) => {
 
 // 上传画册 
 // 参数 from(albumname, albumtype,is)
-// 个人信息修改
 export const createAlbum = (form) => {
     return request.post('/createAlbum/', form, {headers})
 }
 
 
 // 修改画册
+
+
+// 获取收藏画册
+export const getFavorites = (data) => {
+    return request.post('/getFavorites/', data)
+}

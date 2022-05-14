@@ -14,12 +14,18 @@ export const GetAllType = () => {
 // 获取指定类型下的图片的接口
 export const GetImgData = (Goodid) => {
     return request.get("/imgs/" + Goodid + '/')
-    // this.$axios
-    //   .get(this.$host + "/imgs/" + this.Goodid + "/")
-    //   .then((res) => {
-    //     this.urlList = res.data.imgList;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+};
+
+// export const GetImgData = (Goodid, page, pageNum) => {
+//     return request.get("/imgs/" + {
+//         params: {
+//           Goodid,page, pageNum
+//         }
+//       })
+// };
+
+
+// 上传图片的接口
+export const UploadImg = (formData) => {
+    return request.post("/upload/", formData)
 };

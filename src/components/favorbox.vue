@@ -25,25 +25,15 @@
 </template>
 
 <script>
-import store from "@/store";
-import { getAllAlbums } from "@/api/albumAPI";
 export default {
-  data() {
-    return {
-      albumList: "",
-    };
-  },
+  props: ["albumList"],
   methods: {
     InFavorites(val) {
       this.$router.push({ path: `/album/${val}`, params: { id: val } });
     },
-    async getAlbums() {
-      const { data: res } = await getAllAlbums();
-      this.albumList = res.datalist;
-    },
   },
   created() {
-    this.getAlbums();
+    console.log("this.albumList" ,this.albumList);
   },
 };
 </script>
