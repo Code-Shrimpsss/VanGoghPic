@@ -3,7 +3,7 @@ let headers = {
     // 请求头内Content-Type一定要是form-data格式
     "Content-Type": "multipart/form-data",
 }
-// 获取所有图片类型的接口
+// 获取所有画册的接口
 export const getAllAlbums = () => {
     return request.get("/albums/")
       // this.$axios
@@ -34,7 +34,16 @@ export const createAlbum = (form) => {
 // 修改画册
 
 
-// 获取收藏画册
+// 收藏画册
 export const getFavorites = (data) => {
     return request.post('/getFavorites/', data)
+}
+
+// 取消收藏画册
+export const reFavorites = (data) => {
+    return request.post('/reFavorites/', data)
+}
+// 判断是否收藏画册
+export const isFavorites = (data) => {
+    return request.post('/isFavorites/', data)
 }

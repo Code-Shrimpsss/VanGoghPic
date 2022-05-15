@@ -55,7 +55,7 @@
 <script>
 import footers from "../components/Footer.vue";
 import favorBox from "../components/favorbox.vue";
-import { getAllAlbums } from "@/api/albumAPI";
+import { getAllAlbums, isFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
@@ -81,48 +81,16 @@ export default {
         this.$cookies.get("user_id") == item.creator_id
           ? this.myList.push(item)
           : this.favoriteList.push(item);
-        // if (this.$cookies.get("user_id") == item.creator_id) {
-          
-        // }else{
-        //   this.favoriteList.push(item);
-        // }
       });
+      let { data : t } =  await isFavorites(this.favoriteList);
+      console.log(t);
       // this.myList = JSON.parse(JSON.stringify(this.myList));
       console.log("我的", this.myList);
       console.log("收藏", this.favoriteList);
       console.log(this.myList.length <= 0);
-      
-      // this.favoriteList = res.datalist;
-      // this.favoriteList.forEach((item) => {
-      //   item.cover_img = "http://192.168.177.129:8888/" + item.cover_img;
-      // });
-      // console.log(this.favoriteList);
-
-      // childValue.map((item) => {
-      //   console.log(item.id, item.creator_id);
-      //   this.$cookies.get("user_id") == item.creator_id
-      //     ? this.myList.push(item)
-      //     : this.favoriteList.push(item);
-      // });
-      // console.log("我的", this.myList);
-      // console.log("收藏", this.favoriteList);
-    },
-    childByValue(childValue) {
-      console.log("子", childValue);
-      // if (childValue) {
-      //   childValue.map((item) => {
-      //     console.log(item.id, item.creator_id);
-      //     this.$cookies.get("user_id") == item.creator_id
-      //       ? this.myList.push(item)
-      //       : this.favoriteList.push(item);
-      //   });
-      // }
-      // console.log("我的", this.myList);
-      // console.log("收藏", this.favoriteList);
     },
   },
   mounted() {
-    // this.childByValue();
     this.getAlbums();
   },
   created() {

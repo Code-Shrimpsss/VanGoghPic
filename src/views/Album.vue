@@ -28,18 +28,21 @@
               circle
             ></el-button>
             <el-button
-              :plain="true"
-              class="starBtn"
-              @click="stars()"
-              :icon="star"
-              circle
-            ></el-button>
-            <!-- <el-button
+              v-if="isMy == true"
               :plain="true"
               class="starBtn"
               :icon="setting"
               circle
-            ></el-button> -->
+            ></el-button>
+            <el-button
+              v-else
+              :plain="true"
+              class="starBtn"
+              @click="stars()"
+              :icon="star"
+              type="warning"
+              circle
+            ></el-button>
           </div>
         </div>
         <div class="funRight">
@@ -86,7 +89,7 @@
 
 <script>
 import footers from "../components/Footer.vue";
-import { getSignAlbum, getFavorites } from "@/api/albumAPI";
+import { getSignAlbum, getFavorites, reFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
@@ -96,6 +99,8 @@ export default {
       listData: "",
       tid: this.$route.params.id,
       islike: false,
+      isMy: false,
+      user_id: this.$cookies.get("user_id"),
     };
   },
   components: {
@@ -119,9 +124,9 @@ export default {
           type: "warning",
         });
         this.islike = false;
+        this.reFav();
       }
-        console.log(this.islike);
-
+      console.log(this.islike);
     },
     // 首次加载时的收藏按钮
     infoStar() {
@@ -133,30 +138,49 @@ export default {
     },
     // 收藏
     async addFav() {
-      let user_id = this.$cookies.get("user_id");
       let { data: res } = await getFavorites({
-        user_id,
+        user_id: this.user_id,
         albunm_id: this.tid,
         islike: this.islike,
       });
       console.log(res);
     },
     // 取消收藏
+    async reFav() {
+      let { data: res } = await reFavorites({
+        user_id: this.user_id,
+        albunm_id: this.tid,
+        islike: this.islike,
+      });
+      console.log(res);
+    },
     // 画册加载
     async getSignAlbums(pid) {
+      // 1. 判断是否为空
       if (pid == void 0) {
         return;
       }
+      // 2. 获取数据
       const { data: res } = await getSignAlbum(pid);
       let dataD = res.datalist;
+      // 3. 切割图片数据
       if (dataD) {
         dataD.img_list = dataD.img_list.split(";").map((item, index) => {
           return "http://192.168.177.129:8888/" + item;
         });
         this.listData = dataD;
       }
-
-      // console.log(this.listData.img_list);
+      // 4. 判断是否是当前用户的画册
+      this.listData.creator_id == this.$cookies.get("user_id")
+        ? (this.isMy = true)
+        : (this.isMy = false);
+      // 5. 判断是否收藏过
+      console.log(this.listData.isLike);
+      if (this.listData.isLike) {
+        this.islike = this.listData.isLike;
+      }else{
+        this.islike = false
+      }
     },
   },
   created() {
@@ -293,12 +317,13 @@ main {
     text-align: left;
     p {
       font-size: 16px;
+      color: #000;
     }
     div {
       text-align: right;
       span {
         font-size: 10px;
-        color: whitesmoke;
+        color: rgb(128, 128, 128);
       }
     }
   }

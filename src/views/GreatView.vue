@@ -9,8 +9,11 @@
       <h2>VanGogh will continue to update and iterate with your support</h2>
 
       <div class="btnBox">
-        <el-button class="btn" type="primary" @click="$router.push('/')">
+        <!-- <el-button class="btn" type="primary" @click="$router.push('/')">
           回到首页
+        </el-button> -->
+         <el-button class="btn" type="primary" @click="$router.push('/favorites')">
+          回到收藏夹
         </el-button>
         <el-button class="btn" type="primary" @click="$router.push(`/album/${$route.query.id}`)"> 查看画册 </el-button>
       </div>

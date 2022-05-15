@@ -15,18 +15,6 @@
       <h2>注意事项</h2>
       <h4>图片上传需要达到清晰, 正能量</h4>
       <h4>禁止出现三毒,政治,宗教等任何违反道德的图片</h4>
-      <!-- <header>
-        <div class="hleft">
-          <el-button class="btn" type="primary" @click="onSubmit">
-            上传图片
-          </el-button> 
-        </div>
-        <div class="hright">
-        <el-button class="btn" type="primary" @click="onSubmit">
-            上传图片
-          </el-button> 
-        </div>
-      </header> -->
       <el-divider></el-divider>
       <h3>选择类型</h3>
       <el-tabs
@@ -43,12 +31,6 @@
         >
         </el-tab-pane>
       </el-tabs>
-      <!-- <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-        <el-tab-pane label="用户管理" name="first"></el-tab-pane>
-        <el-tab-pane label="配置管理" name="second"></el-tab-pane>
-        <el-tab-pane label="角色管理" name="third"></el-tab-pane>
-        <el-tab-pane label="定时任务补偿" name="fourth"></el-tab-pane>
-      </el-tabs> -->
       <div class="updataBox">
         <el-upload
           class="upload-demo"

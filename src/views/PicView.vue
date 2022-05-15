@@ -79,7 +79,7 @@ export default {
     async imgDataGet() {
       const rLoading = await this.openLoading();
       const { data: res } = await GetImgData(this.Goodid);
-      console.log(res);
+      // res = res.reverse();
       res.imgList.map((item) => {
         item.image_link = "http://192.168.177.129:8888/" + item.image_link;
       });
