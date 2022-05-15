@@ -3,7 +3,7 @@
     <!-- 头部组件 -->
     <headerView></headerView>
     <keep-alive>
-      <router-view></router-view>
+      <router-view :key="key"></router-view>
     </keep-alive>
     <!-- 底部组件 -->
     <footer-view></footer-view>
@@ -18,8 +18,12 @@ export default {
     headerView,
     footerView,
   },
+  computed: {
+    key() {
+      return this.$route.path + Math.random();
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

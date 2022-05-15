@@ -3,7 +3,7 @@ node_modules
 /dist
 babel.config.js
 jsconfig.json
-
+.idea
 # local env files
 .env.local
 .env.*.local

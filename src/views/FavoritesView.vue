@@ -18,10 +18,10 @@
       <div id="mainbox">
         <div class="likeleft" v-if="favoriteList">
           <h2>我的画册</h2>
-          <favor-box v-if="myList.length >= 0" :albumList="myList"></favor-box>
+          <favor-box v-if="isShow" :albumList="myList"></favor-box>
           <el-empty v-else description="暂无创建" :image-size="200"></el-empty>
           <h2>收藏画册</h2>
-          <favor-box v-if="myList" :albumList="favoriteList"></favor-box>
+          <favor-box v-if="isShowTwo" :albumList="favoriteList"></favor-box>
           <el-empty v-else description="暂无收藏" :image-size="200"></el-empty>
         </div>
       </div>
@@ -50,18 +50,18 @@
   </div>
 </template>
 
-
-
 <script>
 import footers from "../components/Footer.vue";
 import favorBox from "../components/favorbox.vue";
-import { getAllAlbums, isFavorites } from "@/api/albumAPI";
+import { getAllAlbums, isFavorites, myFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
       favoriteList: [],
       myList: [],
       token: this.$cookies.get("token"),
+      isShow: false,
+      isShowTwo: false,
     };
   },
   components: {
@@ -75,28 +75,32 @@ export default {
         item.cover_img = "http://192.168.177.129:8888/" + item.cover_img;
       });
       console.log("res.datalist", res.datalist);
-
+      this.myList = []
       res.datalist.map((item) => {
-        console.log(item.id, item.creator_id);
         this.$cookies.get("user_id") == item.creator_id
           ? this.myList.push(item)
           : this.favoriteList.push(item);
       });
-      let { data : t } =  await isFavorites(this.favoriteList);
-      console.log(t);
-      // this.myList = JSON.parse(JSON.stringify(this.myList));
-      console.log("我的", this.myList);
-      console.log("收藏", this.favoriteList);
-      console.log(this.myList.length <= 0);
+      this.favoriteList = []
+      let { data: t } = await isFavorites({
+        list: this.favoriteList,
+        user_id: this.$cookies.get("user_id"),
+      });
+      this.favoriteList = t.data;
+      if (this.myList.length > 0) this.isShow = true;
+      if (this.favoriteList.length > 0) this.isShowTwo = true;
     },
-  },
-  mounted() {
-    this.getAlbums();
   },
   created() {
     if (this.token == null) {
       this.$message.error("请先登录 ( •̀ ω •́ )y ");
     }
+    this.getAlbums();
+  },
+  watch: {
+    $route(to, from) {
+      this.getAlbums();
+    },
   },
 };
 </script>

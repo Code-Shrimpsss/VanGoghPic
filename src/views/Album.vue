@@ -135,6 +135,7 @@ export default {
       } else {
         this.star = "el-icon-star-off";
       }
+      console.log(this.islike);
     },
     // 收藏
     async addFav() {
@@ -161,7 +162,7 @@ export default {
         return;
       }
       // 2. 获取数据
-      const { data: res } = await getSignAlbum(pid);
+      const { data: res } = await getSignAlbum({ pid, user_id: this.user_id });
       let dataD = res.datalist;
       // 3. 切割图片数据
       if (dataD) {
@@ -171,20 +172,22 @@ export default {
         this.listData = dataD;
       }
       // 4. 判断是否是当前用户的画册
-      this.listData.creator_id == this.$cookies.get("user_id")
+      this.listData.creator_id == this.user_id
         ? (this.isMy = true)
         : (this.isMy = false);
-      // 5. 判断是否收藏过
+      console.log(this.listData);
       console.log(this.listData.isLike);
+      // 5. 判断是否收藏过
       if (this.listData.isLike) {
         this.islike = this.listData.isLike;
-      }else{
-        this.islike = false
+      } else {
+        this.islike = false;
       }
+      this.infoStar();
+      console.log(this.islike);
     },
   },
   created() {
-    this.infoStar();
     // 首次画册加载缓冲
     this.getSignAlbums(this.tid);
   },

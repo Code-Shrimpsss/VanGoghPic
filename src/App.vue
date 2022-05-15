@@ -25,7 +25,7 @@ export default {
         this.isShow=true
       })
     }
-  }
+  },
 };
 </script>
 

@@ -16,8 +16,8 @@ export const getAllAlbums = () => {
 };
 
 // 获取画册详情数据
-export const getSignAlbum = (pid) => {
-    return request.post("/album/" + pid + "/")
+export const getSignAlbum = (idDate) => {
+    return request.post("/album/" , idDate )
 };
 
 // 获取收藏夹画册分类
@@ -46,4 +46,8 @@ export const reFavorites = (data) => {
 // 判断是否收藏画册
 export const isFavorites = (data) => {
     return request.post('/isFavorites/', data)
+}
+// 判断是否收藏画册
+export const myFavorites = (data) => {
+    return request.post('/myFavorites/', data)
 }

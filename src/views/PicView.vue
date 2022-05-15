@@ -79,6 +79,7 @@ export default {
     async imgDataGet() {
       const rLoading = await this.openLoading();
       const { data: res } = await GetImgData(this.Goodid);
+      console.log(res);
       // res = res.reverse();
       res.imgList.map((item) => {
         item.image_link = "http://192.168.177.129:8888/" + item.image_link;
@@ -91,7 +92,7 @@ export default {
       if (!this.busyScroll) {
         this.noMoreOcr = false;
         setTimeout(() => {
-          this.PageNum += 1;
+          this.PageNum += 10;
           this.imgDataGet();
         }, 2000);
       } else {
@@ -100,31 +101,22 @@ export default {
       }
     },
     // async imgDataGet() {
-    //   const { data: res } = await GetImgData(
-    //     this.Goodid,
-    //     this.PageNum,
-    //     this.PageSize
-    //   );
-    //   // {
-    //   //     Goodid: this.Goodid,
-    //   //     page: this.PageNum,
-    //   //     page_num: this.PageSize,
-    //   //   }
+    //   const { data: res } = await GetImgData({
+    //     Goodid: this.Goodid,
+    //     PageNum: this.PageNum,
+    //     PageSize: this.PageSize,
+    //   });
     //   console.log(res);
     //   // this.urlList = this.urlList.concat(res.imgList);
-    //   // .then((res) => {
-    //   //   this.PageTotal = res.data.total_num;
-    //   //   this.loadingOcr = false;
-
-    //   //   this.ocrList = this.ocrList.concat(res.data.ocr_list);
-    //   //   if (res.data.ocr_list.length == 0) {
-    //   //     this.noMoreOcr = true;
-    //   //     this.busyScroll = true;
-    //   //   } else {
-    //   //     this.busyScroll = false;
-    //   //   }
-    //   // })
-    //   // .catch((error) => console.log(error));
+    //   this.PageTotal = res.data.total_num;
+    //   this.loadingOcr = false;
+    //   this.urlList = this.urlList.concat(res.data.imgList);
+    //   if (res.data.imgList.length == 0) {
+    //     this.noMoreOcr = true;
+    //     this.busyScroll = true;
+    //   } else {
+    //     this.busyScroll = false;
+    //   }
     // },
   },
   components: {

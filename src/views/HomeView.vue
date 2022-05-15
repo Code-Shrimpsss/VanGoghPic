@@ -52,7 +52,7 @@ export default {
         this.counts.UserCount = index === 0 ? item : this.counts.UserCount;
         this.counts.FavCount = index === 1 ? item : this.counts.FavCount;
         this.counts.picCount =  index === 2 ? item : this.counts.picCount;
-        console.log(item);
+        // console.log(item);
       });
       // console.log(this.counts);
     },

@@ -12,8 +12,8 @@ export const GetAllType = () => {
 };
 
 // 获取指定类型下的图片的接口
-export const GetImgData = (Goodid) => {
-    return request.get("/imgs/" + Goodid + '/')
+export const GetImgData = (data) => {
+    return request.post("/imgs/" , data)
 };
 
 // export const GetImgData = (Goodid, page, pageNum) => {
