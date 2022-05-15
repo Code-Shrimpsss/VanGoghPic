@@ -319,7 +319,7 @@ body,
         justify-content: flex-start;
         padding-top: 5%;
         .likebox {
-          width: 150px;
+          width: 100px;
           margin-right: 10px;
         }
       }

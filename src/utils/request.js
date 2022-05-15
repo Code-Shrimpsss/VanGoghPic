@@ -12,10 +12,6 @@ const instance = axios.create({
 // 添加请求拦截器
 // 请求拦截器的作用是在请求发送前进行一些操作，例如在每个请求体里加上token，每次请求携带token传给后端，统一做处理。
 instance.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么               
-  // if(store.state.token) {
-  //   config.headers['token'] = getToken()
-  // }
   let token = $cookies.get('token')
   let user = $cookies.get('user')
   if (token && user) {

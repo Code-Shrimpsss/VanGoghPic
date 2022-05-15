@@ -53,7 +53,7 @@
 <script>
 import footers from "../components/Footer.vue";
 import favorBox from "../components/favorbox.vue";
-import { getAllAlbums, isFavorites, myFavorites } from "@/api/albumAPI";
+import { getAllAlbums, isFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
@@ -75,18 +75,19 @@ export default {
         item.cover_img = "http://192.168.177.129:8888/" + item.cover_img;
       });
       console.log("res.datalist", res.datalist);
-      this.myList = []
+      this.myList = [];
+      this.favoriteList = [];
       res.datalist.map((item) => {
         this.$cookies.get("user_id") == item.creator_id
           ? this.myList.push(item)
           : this.favoriteList.push(item);
       });
-      this.favoriteList = []
       let { data: t } = await isFavorites({
         list: this.favoriteList,
         user_id: this.$cookies.get("user_id"),
       });
       this.favoriteList = t.data;
+      console.log(t.data);
       if (this.myList.length > 0) this.isShow = true;
       if (this.favoriteList.length > 0) this.isShowTwo = true;
     },
@@ -97,6 +98,7 @@ export default {
     }
     this.getAlbums();
   },
+
   watch: {
     $route(to, from) {
       this.getAlbums();
