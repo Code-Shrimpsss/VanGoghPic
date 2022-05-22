@@ -1,25 +1,33 @@
 <template>
   <div class="headbox">
     <div class="leftHead">
-      <i id="dicon" class="el-icon-moon"></i>
-      <h3 class="lefttxt"><a href="/">Van GoghPic</a></h3>
+      <h3 class="lefttxt" @click="showText = !showText">Van GoghPic</h3>
+      <!-- 搜索框 -->
+      <transition name="el-zoom-in-top">
+        <el-input
+          class="searchBox"
+          v-show="showText"
+          prefix-icon="el-icon-search"
+        >
+        </el-input>
+      </transition>
     </div>
     <!-- 主要导航功能块 -->
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu"
-      mode="horizontal"
-      background-color="rgba(255, 255, 255, 0.00)"
-      :router="true"
-      text-color="#fff"
-      active-text-color="#ffd04b"
-    >
-      <el-menu-item class="el-icon-s-home" index="/">主页</el-menu-item>
-      <el-menu-item class="el-icon-menu" index="/pic">类型</el-menu-item>
-      <el-menu-item class="el-icon-s-management" index="/album"
-        >画册</el-menu-item
-      >
-    </el-menu>
+    <div class="centerNav">
+      <!-- <p class="el-icon-s-home" @click="$router.push('/')"><span>主页</span></p>
+      <p class="el-icon-menu" @click="$router.push('/pic')">
+        <span>类型</span>
+      </p>
+      <p class="el-icon-s-management" @click="$router.push('/album')">
+        <span>画册</span>
+      </p> -->
+      <!-- <p v-for="item, index in typeList" :key="index" :class="item.icon" @click="$router.push(item.url)"> 
+        <span>{{item.text}}</span>
+      </p>       -->
+      <p v-for="item, index in typeList" :key="index" :class="[item.text === activeText ? item.icon + ' active' : item.icon]" @click="tabItem(item.text,item.url)"> 
+        <span>{{item.text}}</span>
+      </p>
+    </div>
     <div class="demo-type">
       <a href="/updataimg"><i class="el-icon-upload"></i></a>
       <a href="/favorites"><i class="el-icon-takeaway-box"></i> </a>
@@ -27,8 +35,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import host from "@/js/host";
@@ -41,6 +47,13 @@ export default {
     return {
       host: host,
       activeIndex: "1", // 头部页面默认下标
+      showText: false,
+      activeText: "主页",
+      typeList: [
+        {icon: "el-icon-s-home", text: "主页", url: "/"},
+        {icon: "el-icon-menu", text: "类型", url: "/pic"},
+        {icon: "el-icon-s-management", text: "画册", url: "/album"},
+      ]
     };
   },
   methods: {
@@ -53,6 +66,11 @@ export default {
         this.dialogVisible = false;
       }
     },
+    tabItem(text, url) {
+      this.activeText= text;
+      this.$router.push(url);
+    },
+
   },
   created() {
     // 页面一创建，就去cookie中取值
@@ -62,12 +80,10 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 * {
   margin: 0;
-
   padding: 0;
-
   // box-sizing: border-box;
 }
 
@@ -79,57 +95,6 @@ ul li {
 }
 ul {
   display: flex;
-}
-
-// @media screen and (max-width: 400px) {
-//   .headbox {
-//     padding: 0 0px;
-
-//     display: flex;
-
-//     justify-content: space-evenly;
-//   }
-// }
-
-.pic_code {
-  width: 40%;
-}
-
-.el-icon-warning {
-  color: red;
-}
-
-#warnings {
-  text-align: left;
-
-  color: #ff4b2b;
-}
-
-.get_msg_code {
-  width: 6.25rem;
-
-  height: 38px;
-
-  padding: 0;
-
-  border: 1px solid #c6c6c6;
-
-  color: #333;
-
-  background-color: #fff;
-
-  margin: 0px;
-}
-
-.el-dialog__body {
-  padding: 0;
-}
-
-.Edialog {
-  padding: 0;
-  h2 {
-    color: #333;
-  }
 }
 
 .headbox {
@@ -144,36 +109,39 @@ ul {
   background-color: rgba(255, 255, 255, 0.083);
   padding: 5px 0px;
   height: 60px;
-
   .leftHead {
     position: relative;
-
+    width: 30%;
+    text-align: left;
     .lefttxt {
-      text-align: center;
-
       margin-top: 20px;
-
       display: inline-block;
       color: #fff;
       font-family: "STXinwei";
+      font-size: 1.5rem;
       a {
         text-decoration: none;
         color: #fff;
       }
     }
   }
-
+  .el-menu {
+    width: 30%;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0);
+    justify-content: space-between;
+  }
   #dicon {
     color: #fff;
-    display: none;
-    font-size: 25px;
+    font-size: 30px;
     margin: 0 2px;
   }
 
   .demo-type {
-    margin-top: 15px;
-    width: 130px;
+    width: 30%;
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
     i {
       // color: #bbb;
       color: #fff;
@@ -195,10 +163,52 @@ ul {
 .elItem {
   background-color: #333;
 }
-// @media screen and (max-width: 600px) {
-//   #dicon{
-//     display: inline-block;
-//   }
-// }
-</style>
 
+::deep .el-menu.el-menu--horizontal {
+  // border: 0px;
+  border-bottom: solid 3px #e6e6e6;
+}
+
+.centerNav {
+  width: 30%;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    width: 30%;
+    font-size: 30px;
+    cursor: pointer;
+    span {
+      display: block; /*统一转化为块级元素*/
+      font-size: 0;
+    }
+    &:hover {
+      font-size: 0px;
+      color: rgb(193, 221, 255);
+      span {
+        font-size: 25px;
+        font-weight: 900;
+      }
+    }
+  }
+}
+.active {
+  font-size: 0px;
+  color: rgb(74, 155, 255);
+  span {
+    font-size: 25px;
+    font-weight: 900;
+  }
+}
+.searchBox {
+  margin-left: 20px;
+  width: 70%;
+  /deep/ .el-input__inner {
+  background: transparent;
+  border-radius: 20px;
+  border: 2px solid whitesmoke;
+}
+}
+
+</style>

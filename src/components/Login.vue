@@ -197,11 +197,8 @@
   </div>
 </template>
 
-
-
 <script>
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
 import { getUserDate } from "@/api/userAPi";
 export default {
   data() {
@@ -294,8 +291,7 @@ export default {
     async imgUpdata() {
       if (this.username) {
         const { data: res } = await getUserDate(this.username);
-        this.author_img = res.data.author_img;
-        console.log(res);
+        this.author_img = res.author_img;
       }
     },
     // 提取地址栏中的查询字符串
@@ -539,7 +535,7 @@ export default {
           )
 
           .then((response) => {
-            if (response.data.code == 0) {
+            if (response.data.code == 200) {
               this.SaveUser(response.data.data);
               this.$message({
                 message: "注册成功 (〃￣︶￣)人(￣︶￣〃) ",
@@ -655,14 +651,15 @@ export default {
     // 页面一创建，就去cookie中取值
     this.username = this.$cookies.get("username");
     this.token = this.$cookies.get("token");
-    // if (this.username && this.token) {
-    //   this.is_login = true;
-    // }
     this.imgUpdata();
+    console.log(sessionStorage.getItem("InfoLogin"));
+    if (sessionStorage.getItem("InfoLogin") == "true") {
+      // console.log(sessionStorage.getItem("InfoLogin"));
+      this.dialogVisible = true;
+    }
   },
 };
 </script>
-
 
 <style lang="less">
 * {
@@ -717,7 +714,7 @@ h2 {
   height: 100%;
   padding: 0 50px;
 }
-.HTitle {
+.HTitle h2 {
   color: #fff;
 }
 
@@ -841,7 +838,6 @@ button:active {
 
 .container.active .sign-up-container {
   transform: translateX(100%);
-
   z-index: 5;
 }
 
@@ -891,6 +887,7 @@ button:active {
   color: #333;
   background-color: #fff;
   margin: 0px;
+  cursor: pointer;
 }
 
 .el-dialog__body {
@@ -899,9 +896,14 @@ button:active {
 
 .Edialog {
   padding: 0;
-  h2 {
-    color: #333;
-  }
+}
+/deep/ .el-input__inner{
+  background: #fff;
+}
+
+#sign-up, #sign-in{
+  border: 2px solid rgb(226, 226, 226);
+  cursor:pointer;
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>
-

@@ -11,9 +11,9 @@
           ></el-button>
           <h1 class="headtxt">收藏夹</h1>
         </div>
-        <button class="createImgBtn" @click="$router.push('/createimg')">
+        <el-button class="createImgBtn" @click="$router.push('/createimg')">
           创建画册
-        </button>
+        </el-button>
       </div>
       <div id="mainbox">
         <div class="likeleft" v-if="favoriteList">
@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import footers from "../components/Footer.vue";
-import favorBox from "../components/favorbox.vue";
+import footers from "../../components/Footer.vue";
+import favorBox from "../../components/favorbox.vue";
 import { getAllAlbums, isFavorites } from "@/api/albumAPI";
 export default {
   data() {
@@ -70,14 +70,17 @@ export default {
   },
   methods: {
     async getAlbums() {
+      if (this.token == null) {
+        this.$message.error("请先登录 ( •̀ ω •́ )y ");
+        return;
+      }
       const { data: res } = await getAllAlbums();
-      res.datalist.forEach((item) => {
+      res.forEach((item) => {
         item.cover_img = "http://192.168.177.129:8888/" + item.cover_img;
       });
-      console.log("res.datalist", res.datalist);
       this.myList = [];
       this.favoriteList = [];
-      res.datalist.map((item) => {
+      res.map((item) => {
         this.$cookies.get("user_id") == item.creator_id
           ? this.myList.push(item)
           : this.favoriteList.push(item);
@@ -86,16 +89,12 @@ export default {
         list: this.favoriteList,
         user_id: this.$cookies.get("user_id"),
       });
-      this.favoriteList = t.data;
-      console.log(t.data);
+      this.favoriteList = t;
       if (this.myList.length > 0) this.isShow = true;
       if (this.favoriteList.length > 0) this.isShowTwo = true;
     },
   },
   created() {
-    if (this.token == null) {
-      this.$message.error("请先登录 ( •̀ ω •́ )y ");
-    }
     this.getAlbums();
   },
 
@@ -158,10 +157,12 @@ body,
     font-size: 40px;
   }
   .createImgBtn {
+    border-radius: 20px;
     width: 200px;
     background-color: transparent;
     border: 2px solid #fff;
     font-size: 25px;
+    color: #fff;
     font-family: Georgia, "Times New Roman", Times, serif;
   }
 }

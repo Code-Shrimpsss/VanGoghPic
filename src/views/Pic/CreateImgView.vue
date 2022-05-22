@@ -85,7 +85,7 @@
 
 
 <script>
-import footers from "../components/Footer.vue";
+import footers from "../../components/Footer.vue";
 import { GetAllType } from "@/api/imgAPI";
 import { createAlbum } from "@/api/albumAPI";
 export default {
@@ -113,19 +113,15 @@ export default {
     // 在上传图片之前，先把图片的url存到数组中
     handlePictureCardPreview(file, fileList) {
       this.dialogImageUrl = file.url;
-      // this.dialogVisible = true;
-      // this.form.imgLists.map((item, index) => {
-      //   if (item.uid === fileList.uid) {
-      //     this.form["imgLists"].push(index);
-      //   }
-      // });
-      this.form.imgLists.push(file.authorImg);
+      this.form.imgLists.push(file.data);
     },
     // 删除图片
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      let copy = [...this.form.imgLists]
+      console.log(copy);
       this.form.imgLists.map((item, index) => {
-        if (item === file.response.authorImg) {
+        if (item === file.response.data) {
           this.form["imgLists"].pop(item);
         }
       });
@@ -137,22 +133,14 @@ export default {
     // 获取所有的画册类型
     async GetAllType() {
       const { data: res } = await GetAllType();
-      this.types = res.lists;
+      this.types = res;
     },
     // 画册创建
     async getAlbumFrom() {
       this.form["defaultImg"] = this.form.imgLists[0];
-      // console.log(typeof this.form.imgLists);
-      // typeof this.form.imgLists == String
-      //   ? this.form.imgLists
-      //   : (this.form.imgLists = this.form.imgLists.join(";"));
-      // this.form.imgLists = this.form.imgLists.join(";");
-      console.log(this.form.imgLists);
-      console.log(this.form["defaultImg"]);
       const { data: res } = await createAlbum(this.form);
       if (res.code === 200) {
         this.$message.success("创建成功");
-        // this.$router.push(`album/${res.data}`); 
         this.$router.push({path: `/great`, query: {id: res.data}}); 
       } else {
         this.$message.error(res.errmsg);
@@ -160,23 +148,16 @@ export default {
     },
     onSubmit() {
       this.getAlbumFrom();
-      console.log(this.form);
     },
   },
   created() {
     // 在组件创建之前，先获取所有的画册类型
     this.GetAllType();
-  },
-  // watch: {
-  //   form: {
-  //     handler(newVal) {
-  //       console.log(newVal);
-  //     },
-  // }
+  }
 };
 </script>
 
-<style lang="less">
+<style lang="less"  >
 * {
   padding: 0;
   margin: 0;

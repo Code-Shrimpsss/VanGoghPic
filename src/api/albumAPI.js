@@ -6,38 +6,38 @@ let headers = {
 // 获取所有画册的接口
 export const getAllAlbums = () => {
     return request.get("/albums/")
-      // this.$axios
-      //   .get(this.$host + "/albums/")
-      //   .then((res) => {
-      //     this.albumList = res.data.datalist;
-      //     // this.albumList.img_list = this.albumList.img_list.split(";");
-      //   })
-      //   .catch((err) => console.log(err));
 };
 
 // 获取画册详情数据
-export const getSignAlbum = (idDate) => {
-    return request.post("/album/" , idDate )
+export const getSignAlbum = (data) => {
+    /**
+ * @param {Object} data  // 上传的数据
+ */
+    return request.post("/album/", data)
 };
 
-// 获取收藏夹画册分类
-// export
-
-
 // 上传画册 
-// 参数 from(albumname, albumtype,is)
 export const createAlbum = (form) => {
-    return request.post('/createAlbum/', form, {headers})
+    /**
+     * @param {Object} form  // 上传的数据
+     * @returns {Promise}
+     */
+    return request.post('/createAlbum/', form, { headers })
 }
 
-
 // 修改画册
-
+export const updataAlbum = (data) => {
+    /**
+     * @param {Object} data  // 上传的数据
+     */
+    return request.post('/updataAlbum/', data)
+}
 
 // 收藏画册
 export const getFavorites = (data) => {
     return request.post('/getFavorites/', data)
 }
+
 
 // 取消收藏画册
 export const reFavorites = (data) => {
@@ -47,7 +47,11 @@ export const reFavorites = (data) => {
 export const isFavorites = (data) => {
     return request.post('/isFavorites/', data)
 }
-// 判断是否收藏画册
+// 主页画册展示
 export const myFavorites = (data) => {
     return request.post('/myFavorites/', data)
+}
+// 个人主页画册
+export const testFavorites = (user) => {
+    return request.get('/testFavorites/' + user + '/')
 }

@@ -14,7 +14,7 @@
     <div class="main">
       <h2>注意事项</h2>
       <h4>图片上传需要达到清晰, 正能量</h4>
-      <h4>禁止出现三毒,政治,宗教等任何违反道德的图片</h4>
+      <h4>禁止出现三毒, 政治, 宗教等任何违反道德的图片</h4>
       <el-divider></el-divider>
       <h3>选择类型</h3>
       <el-tabs
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import footers from "../components/Footer.vue";
+import footers from "../../components/Footer.vue";
 import { GetAllType } from "@/api/imgAPI";
 import { UploadImg } from "@/api/imgAPI";
 export default {
@@ -84,8 +84,8 @@ export default {
     handleRemove(file, fileList) {
       this.imgList.map((item) => {
         console.log(item);
-        console.log(item == file.response.authorImg);
-        if (item == file.response.authorImg) {
+        console.log(item == file.response.data);
+        if (item == file.response.data) {
           this.imgList.pop(item);
         }
       });
@@ -94,11 +94,11 @@ export default {
     handlePictureCardPreview(file, fileList) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-      this.imgList.push(file.authorImg);
+      this.imgList.push(file.data);
     },
     async GetAllType() {
       const { data: res } = await GetAllType();
-      this.types = res.lists;
+      this.types = res;
     },
     handleClick(tab, event) {
       this.Goodid = Number(tab.index);
@@ -119,12 +119,11 @@ export default {
         type: this.Goodid,
         imgList: this.imgList,
       };
-      const { data: res } = await UploadImg(data);
+      const res = await UploadImg(data);
       console.log(res);
       if (res.code == 200) {
         this.$message.success("上传成功");
-        // this.update();
-        this.$router.go(0);
+        this.$router.push('/pic');
       } else {
         this.$message.error("上传失败");
       }
@@ -139,7 +138,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #updataMain {
   // display: flex;
   // flex-direction: column;
@@ -201,13 +200,19 @@ export default {
     border: 2px solid #fff;
   }
 }
+h2{
+color: #fff;
+}
 h3 {
-  text-decoration: #fff;
+  // text-decoration: #fff;
   color: #fff;
   // font-weight: 600;
   // border-bottom: 5px solid #0081EF;
   margin-bottom: 5px;
   font-family: Georgia, "Times New Roman", Times, serif;
+}
+h4{
+  color: gray;
 }
 .el-upload__tip {
   margin-bottom: 20px;
@@ -215,8 +220,21 @@ h3 {
 .el-upload-list__item {
   height: 40px;
 }
-.el-tabs__nav-scroll {
+/deep/.el-tabs__nav-scroll {
   display: flex;
   justify-content: space-around;
+}
+/deep/ .el-tabs__item{
+  color: gray;
+}
+/deep/ .is-active{
+  color: #409EFF;
+}
+/deep/ .el-tabs__nav-wrap::after{
+    background-color:transparent ;
+}
+/deep/ .el-tabs__active-bar{
+  height: 5px;
+  border-radius:5px ;
 }
 </style>

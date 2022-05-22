@@ -5,6 +5,8 @@ let headers = {
 }
 // 首页展示的数据
 export const getUser = () => {
+    // { params, loading: true }
+    // { loading: false }
     return request.get('/allcounts')
 }
 

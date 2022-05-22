@@ -1,7 +1,7 @@
 <template>
   <div class="footerbox">
     <el-divider id="logTxt"><i></i></el-divider>
-    <div class="copyright">©2021 - 2022 By <a href="https://juejin.cn/user/783303009380040">Shrimpsss</a></div>
+    <div class="copyright">©2021 - 2022 By  <el-link class="link" href="https://github.com/jiaoyanxia" target="_blank">jiaoyanxia</el-link></div>
     <p>“Do not quench your inspiration and your imagination; do not become the slave of your model.”</p>
     <p> — Vincent van Gogh</p>
   </div>
@@ -22,9 +22,11 @@ export default {
   // border-top: 1px solid #e6e6e6;
   background-color: rgb(36, 37, 39);
   color: #bbb;
-  a{
+  .link{
     color: #fff;
-    text-decoration: none;
+    font-size:18px ;
+    // text-decoration: none;
+    font-family:Georgia, 'Times New Roman', Times, serif;
   }
   text-align: center;
   .el-icon-ship{

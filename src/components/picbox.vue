@@ -12,7 +12,6 @@
         <el-skeleton-item variant="image" id="skeimg" />
       </template>
       <template>
-        <!--  -->
         <div id="cardbox" v-for="(item, index) in lists" :key="index">
           <!-- :src="item.image_thumbnail" -->
           <!-- ['fill', 'contain', 'cover', 'none', 'scale-down'] -->
@@ -43,10 +42,6 @@ export default {
     };
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-      console.log(this.lists[0]);
-    },
     setLoading() {
       this.loading = true;
       setTimeout(() => (this.loading = false), 1550);

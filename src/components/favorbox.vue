@@ -6,7 +6,7 @@
         v-for="(item, index) in albumList"
         :key="index"
         :style="{ backgroundImage: 'url(' + item.cover_img + ')' }"
-        @click="InFavorites(item.id)"
+        @click="InAlbum(item.id)"
       >
         <p>{{ item.title }}</p>
         <el-divider class="lints" content-position="right"></el-divider>
@@ -28,7 +28,7 @@
 export default {
   props: ["albumList"],
   methods: {
-    InFavorites(val) {
+    InAlbum(val) {
       this.$router.push({ path: `/album/${val}`, params: { id: val } });
     },
   },
@@ -58,13 +58,14 @@ body {
     position: relative;
     width: 200px;
     height: 100px;
-    background-color: #3658d8;
+    background-color: #345ae6;
     border-radius: 15px;
     margin: 20px 10px 20px 0;
     padding: 20px;
     display: inline-block;
     background-size: cover;
     background-repeat: no-repeat;
+    transition: background-image 1.5s;
     p {
       color: #fff;
       font-size: 20px;
@@ -73,13 +74,13 @@ body {
       width: 0px;
       height: 2px;
       transition: width 1.5s;
-      -webkit-transition: width 1.5s; /* Safari */
+      // -webkit-transition: width 1.5s; /* Safari */
       margin-bottom: 2px;
     }
     span {
       color: transparent;
       transition: color 1.5s;
-      -webkit-transition: color 1.5s; /* Safari */
+      // -webkit-transition: color 1.5s; /* Safari */
     }
     .introduces {
       display: block;
@@ -90,6 +91,8 @@ body {
     }
   }
   li:hover {
+    // soft-light  darken
+    background-blend-mode: exclusion;
     .lints {
       width: 200px;
     }

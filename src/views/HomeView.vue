@@ -1,10 +1,12 @@
 <template>
   <div class="home">
     <div class="mainBox">
-      <div class="subjectTxt">
-        <h1>Van GoghPic</h1>
-        <h1>Lightweight Social Wallpaper Site</h1>
-      </div>
+      <transition name="bounce">
+        <div class="subjectTxt" v-if="show" @click="show = !show">
+          <h1>Van GoghPic</h1>
+          <h1>Lightweight Social Wallpaper Site</h1>
+        </div>
+      </transition>
       <div class="Banner">
         <img src="../assets/vangogh1.jpg" alt="" />
       </div>
@@ -40,29 +42,52 @@ export default {
         FavCount: "339",
         picCount: "4239",
       },
+      show: true,
     };
   },
   methods: {
     async getUserPro() {
       const { data: res } = await getUser();
-      // this.counts.UserCount = res.counts[0];
-      // this.counts.FavCount = res.counts[1];
-      // this.counts.picCount = res.counts[2];
-      res.counts.map((item, index) => {
-        this.counts.UserCount = index === 0 ? item : this.counts.UserCount;
-        this.counts.FavCount = index === 1 ? item : this.counts.FavCount;
-        this.counts.picCount =  index === 2 ? item : this.counts.picCount;
-        // console.log(item);
-      });
-      // console.log(this.counts);
+      this.counts.UserCount = res[0];
+      this.counts.FavCount = res[1];
+      this.counts.picCount = res[2];
+      // for (let index = 0; index < res.length; index++) {
+      //   console.log(this.counts[index] = res[index]);
+      //   this.counts[index] = res[index]
+      // }
+      // res.map((item, index) => {
+      //   console.log(this.counts[index]);
+
+      //   // this.counts.UserCount = index === 0 ? item : this.counts.UserCount;
+      //   // this.counts.FavCount = index === 1 ? item : this.counts.FavCount;
+      //   // this.counts.picCount =  index === 2 ? item : this.counts.picCount;
+      // });
     },
   },
   created() {
     this.getUserPro();
   },
+  // beforeRouteEnter(to, from, next) {
+  //   next((vm) => {
+  //     // beforeRouteEnter不能通过this访问组件实例，但是可以通过 vm 访问组件实例
+  //     // console.log(vm.$cookies); //vm.demodata即this.demodata
+  //     if (
+  //       ((from.name === "favorites" || from.name === "updataimg") &&
+  //         vm.$cookies.get("token") == null) ||
+  //       ""
+  //     ) {
+  //       console.log("守卫执行登录");
+  //       sessionStorage.setItem("InfoLogin", "true");
+  //       next();
+  //     } else {
+  //       sessionStorage.setItem("InfoLogin", "false");
+  //       next();
+  //     }
+  //   });
+  // },
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 h1,
 h2 {
   /* font-family: Georgia, ‘Times New Roman’, Times, serif; */
@@ -140,18 +165,32 @@ h2 {
   .subjectTxt {
     position: absolute;
   }
-  h1{
+  h1 {
     font-size: 20px;
   }
-  .FeaturesBox{
+  .FeaturesBox {
     position: static;
   }
-  // .Banner{
-  //     display:none ;
-  //     margin-top: 0;
-  // }
   .Banner img {
     width: 250px;
+  }
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

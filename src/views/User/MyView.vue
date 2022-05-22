@@ -20,6 +20,7 @@
           </p>
           <p class="el-icon-wind-power">
             &nbsp; hobby : &nbsp;
+            <!-- <p v-if="listdata.hobbys == []"> 没有喜欢的...</p> -->
             <el-button
               class="btn"
               v-for="item in listdata.hobbys"
@@ -27,20 +28,18 @@
               type="primary"
               >{{ item }}</el-button
             >
-          </p>
-          <h3 class="el-icon-picture-outline-round">&nbsp;我的收藏夹</h3>
+          <h3 class="el-icon-picture-outline-round">&nbsp;我的画册</h3>
           <div class="collectBox">
-            <div v-for="item in likeUrls" :key="item">
-              <a><img class="likebox" :src="item" alt="" /></a>
-              <a><img class="likebox" :src="item" alt="" /></a>
-              <a><img class="likebox" :src="item" alt="" /></a>
+            <p class="pError" v-show="isfav">您还未拥有画册 ( •̀ ω •́ )y </p>
+            <div v-for="item,index in myList" :key="index">
+              <img class="likebox" @click="$router.push(`/album/${item.id}`)" :src="item.cover_img" alt="" />
+              <p>{{item.title}}</p>
             </div>
           </div>
           <h3 class="el-icon-magic-stick">&nbsp;个性签名</h3>
           <div class="txtbox">
             <span v-if="listdata.signature">{{ listdata.signature }}</span>
             <span v-else> 伟大的人从来不缺个性签名... </span>
-        
           </div>
         </div>
         <div>
@@ -54,7 +53,7 @@
             ></el-button>
             <!-- el-icon-setting -->
           </div>
-          <button class="outLogin" @click="logout()">退出登录</button>
+          <el-button class="outLogin" @click="logout()">退出登录</el-button>
         </div>
       </div>
       <!-- el-fade-in-linear -->
@@ -148,14 +147,15 @@
 
 
 <script>
-import footers from "../components/Footer.vue";
-import { getUserDate, ReviseUser } from "@/api/userAPi";
+import footers from "../../components/Footer.vue";
+import { getUserDate, ReviseUser} from "@/api/userAPi";
+import {  testFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
       // 更改信息的参数
+      user:this.$cookies.get("username"),
       ruleFrom: {
-        username: this.$cookies.get("username"),
         rename: "",
         rehobbys: "",
         reimg: "",
@@ -163,7 +163,8 @@ export default {
       },
       urlImg: "",
       // 主要数据源
-      likeUrls: ["https://lipsum.app/312x208/000/fff"],
+      myList: [],
+      isfav: true,
       listdata: {},
       // 选项数据源
       options: ["风景", "城市", "自然", "人物", "动物", "其他"],
@@ -179,7 +180,7 @@ export default {
       console.log(file);
       console.log(res);
       this.urlImg = URL.createObjectURL(file.raw);
-      this.ruleFrom.reimg = res.authorImg;
+      this.ruleFrom.reimg = res.data;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg" || "image/png" || "image/gif";
@@ -195,7 +196,7 @@ export default {
     },
     // 提交修改
     async submitForm(val) {
-      console.log(this.ruleFrom.rehobbys);
+      val['username'] = this.user
       const { data: res } = await ReviseUser(val);
       if (res.code === 200) {
         console.log(res);
@@ -207,6 +208,7 @@ export default {
         this.$message.error("修改失败");
       }
     },
+    // 退出登录
     logout() {
       // 1.删除cookies中的用户信息
       this.$cookies.remove("username");
@@ -216,23 +218,30 @@ export default {
     },
     // 显示用户数据
     async infoUser() {
-      let user = this.$cookies.get("username");
-      const { data: res } = await getUserDate(user);
-      this.listdata = res.data;
+      const { data: res } = await getUserDate(this.user);
+      this.listdata = res;
       console.log(this.listdata);
       // 将喜好通过<;>切割转换为数组 再截取前三位
-      if(res.data.hobby){
-        this.listdata.hobbys = res.data.hobby.split(";").slice(0, 3);
+      if(res.hobby){
+        this.listdata.hobbys = res.hobby.split(";").slice(0, 3);
       }
-      // console.log(this.listdata.hobbys);
     },
+    // 清空表单
     clearFrom(val) {
       this.ruleFrom = "";
       Pshow = !Pshow;
+    },
+    async Far(){
+        const { data: res } = await testFavorites(this.user);
+        if(res.length > 0){
+          this.myList =  res.slice(0,3)
+          this.isfav = false;
+        }
     }
   },
   created() {
     this.infoUser();
+    this.Far();
   },
 };
 </script>
@@ -292,7 +301,7 @@ body,
   .mianform,
   .modifybox {
     width: 35%;
-    height: 24.4371rem;
+    // height: 24.4371rem;
     padding: 5%;
     // padding-top: 3%;
     background-color: rgb(57, 58, 64);
@@ -315,12 +324,26 @@ body,
       .collectBox {
         width: 100%;
         display: flex;
-        // justify-content: space-evenly;
         justify-content: flex-start;
         padding-top: 5%;
         .likebox {
-          width: 100px;
+          width: 130px;
+          height: 95px;
           margin-right: 10px;
+          border: 2px solid #fff;
+          cursor: pointer;
+        }
+        .pError{
+          padding: 20px;
+          background: #8c939d69;
+          border-radius: 20px;
+        }
+        p{
+          text-align: right;
+          margin: 0;
+          position: relative;
+          top: -30px;
+          right: 15px;
         }
       }
       .txtbox {

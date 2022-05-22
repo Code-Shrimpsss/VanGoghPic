@@ -1,5 +1,5 @@
 <template>
-  <div id="phone">
+  <div id="Albums">
     <div class="likeleft">
       <h2>画册</h2>
       <favor-box :albumList="list"></favor-box>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import favorBox from "../components/favorbox.vue";
+import favorBox from "../../components/favorbox.vue";
 import { getAllAlbums } from "@/api/albumAPI";
 export default {
   components: {
@@ -22,10 +22,10 @@ export default {
   methods: {
     async getAlbums() {
       const { data: res } = await getAllAlbums();
-      res.datalist.forEach((item) => {
+      res.forEach((item) => {
         item.cover_img = "http://192.168.177.129:8888/" + item.cover_img;
       });
-      this.list = res.datalist
+      this.list = res
       console.log(this.list);
     },
   },
@@ -35,7 +35,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped >
 * {
   margin: 0;
   padding: 0;
@@ -47,7 +47,7 @@ body {
   width: 100%;
   display: block;
 }
-#phone {
+#Albums {
   height: 100%;
   padding: 80px 12% 0;
   background-color: rgb(36, 37, 39);
@@ -58,5 +58,8 @@ body {
 }
 .likeleft {
   text-align: left;
+}
+h2 {
+  color: #fff;
 }
 </style>
