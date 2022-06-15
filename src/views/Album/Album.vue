@@ -254,7 +254,7 @@ export default {
       if (cid == uid) {
         this.$message.success("无法访问自己哦");
       } else {
-        this.$router.push("/");
+        // this.$router.push("/");
         // this.$router.push(`avatar/${cid}`, { params: { id: cid } });
         this.$router.push({
           path: `avatar/${cid}`,

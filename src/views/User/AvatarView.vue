@@ -9,7 +9,6 @@
       ></el-button>
       <h1 class="headtxt">{{ listdata.username }}的个人主页</h1>
     </div>
-    <!--  -->
     <div class="avater">
       <div class="mianform">
         <div class="Pinfo">
