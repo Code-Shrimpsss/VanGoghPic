@@ -250,17 +250,17 @@ export default {
   methods: {
     infoUser(cid) {
       let uid = this.$cookies.get("user_id");
-      console.log(this.$route.path);
       if (cid == uid) {
         this.$message.success("无法访问自己哦");
       } else {
-        // this.$router.push("/");
-        // this.$router.push(`avatar/${cid}`, { params: { id: cid } });
-        this.$router.push({
-          path: `avatar/${cid}`,
-          query: { name: this.listData.username },
-          // query: { id: cid},
-        });
+        this.$router.push(`/avatar/${cid}`, { params: { id: cid } });
+        // this.$router.push({
+        //   path: `avatar/${cid}`,
+        //   query: { name: this.listData.username },
+        //   // query: { id: cid},
+        // });
+
+        // this.$router.replace(`avatar/${cid}`);
       }
     },
     isclose(bol) {
@@ -418,7 +418,7 @@ export default {
       }
 
       // 3. 发送请求
-      let { data: res } = await updataAlbum({
+      await updataAlbum({
         id: this.listData.id,
         title, // 标题
         expost, // 描述
@@ -469,6 +469,7 @@ export default {
   },
   // 监听画册变化
   watch: {
+    // immediate: true,
     $route(to, from) {
       this.$nextTick(() => {
         this.$router.go(0);

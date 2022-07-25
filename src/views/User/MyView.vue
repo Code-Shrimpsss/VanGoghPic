@@ -9,7 +9,6 @@
       ></el-button>
       <h1 class="headtxt">个人主页</h1>
     </div>
-    <!--  -->
     <div class="my" v-if="listdata">
       <div class="mianform">
         <div class="Pinfo">
@@ -28,12 +27,19 @@
               type="primary"
               >{{ item }}</el-button
             >
+          </p>
+
           <h3 class="el-icon-picture-outline-round">&nbsp;我的画册</h3>
           <div class="collectBox">
-            <p class="pError" v-show="isfav">您还未拥有画册 ( •̀ ω •́ )y </p>
-            <div v-for="item,index in myList" :key="index">
-              <img class="likebox" @click="$router.push(`/album/${item.id}`)" :src="item.cover_img" alt="" />
-              <p>{{item.title}}</p>
+            <p class="pError" v-show="isfav">您还未拥有画册 ( •̀ ω •́ )y</p>
+            <div v-for="(item, index) in myList" :key="index">
+              <img
+                class="likebox"
+                @click="$router.push(`/album/${item.id}`)"
+                :src="item.cover_img"
+                alt=""
+              />
+              <p>{{ item.title }}</p>
             </div>
           </div>
           <h3 class="el-icon-magic-stick">&nbsp;个性签名</h3>
@@ -124,7 +130,7 @@
                   class="subbtn"
                   type="warning"
                   :plain="true"
-                  @click="Pshow = !Pshow;"
+                  @click="Pshow = !Pshow"
                   >取消修改</el-button
                 >
                 <el-button
@@ -144,17 +150,16 @@
   </div>
 </template>
 
-
-
 <script>
 import footers from "../../components/Footer.vue";
-import { getUserDate, ReviseUser} from "@/api/userAPi";
-import {  testFavorites } from "@/api/albumAPI";
+import { getUserDate, ReviseUser } from "@/api/userAPi";
+import { testFavorites } from "@/api/albumAPI";
 export default {
   data() {
     return {
       // 更改信息的参数
-      user:this.$cookies.get("username"),
+      user: this.$cookies.get("username"),
+      user_id: this.$cookies.get("user_id"),
       ruleFrom: {
         rename: "",
         rehobbys: "",
@@ -196,9 +201,9 @@ export default {
     },
     // 提交修改
     async submitForm(val) {
-      val['username'] = this.user
-      const { data: res } = await ReviseUser(val);
-      if (res.code === 200) {
+      val["username"] = this.user;
+      const { data: res, code } = await ReviseUser(val);
+      if (code == 200) {
         console.log(res);
         this.$cookies.set("username", res.data);
         this.$message.success("修改成功");
@@ -212,17 +217,17 @@ export default {
     logout() {
       // 1.删除cookies中的用户信息
       this.$cookies.remove("username");
+      this.$cookies.remove("user_id");
       this.$cookies.remove("token");
       this.$message.info("退出成功");
       this.$router.push("/");
     },
     // 显示用户数据
     async infoUser() {
-      const { data: res } = await getUserDate(this.user);
+      const { data: res } = await getUserDate(this.user_id);
       this.listdata = res;
-      console.log(this.listdata);
       // 将喜好通过<;>切割转换为数组 再截取前三位
-      if(res.hobby){
+      if (res.hobby) {
         this.listdata.hobbys = res.hobby.split(";").slice(0, 3);
       }
     },
@@ -231,13 +236,13 @@ export default {
       this.ruleFrom = "";
       Pshow = !Pshow;
     },
-    async Far(){
-        const { data: res } = await testFavorites(this.user);
-        if(res.length > 0){
-          this.myList =  res.slice(0,3)
-          this.isfav = false;
-        }
-    }
+    async Far() {
+      const { data: res } = await testFavorites(this.user_id);
+      if (res.length > 0) {
+        this.myList = res.slice(0, 3);
+        this.isfav = false;
+      }
+    },
   },
   created() {
     this.infoUser();
@@ -333,12 +338,12 @@ body,
           border: 2px solid #fff;
           cursor: pointer;
         }
-        .pError{
+        .pError {
           padding: 20px;
           background: #8c939d69;
           border-radius: 20px;
         }
-        p{
+        p {
           text-align: right;
           margin: 0;
           position: relative;

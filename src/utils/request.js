@@ -1,6 +1,5 @@
 import axios from "axios";
-import { Message } from "element-ui";
-import { Loading } from "element-ui";
+import { Message, Loading } from "element-ui";
 
 const instance = axios.create({
   baseURL: 'http://192.168.177.129:8000/',
@@ -32,9 +31,9 @@ instance.interceptors.request.use(function (config) {
   const { loading = true } = config;
   config.headers.Authorization = 'Bearer ' + $cookies.get('token');
   if (loading) addLoading();
-  return config; 
+  return config;
 }, function (error) {
-  console.log("error" ,error);
+  console.log("error", error);
   return Promise.reject(error)
 })
 

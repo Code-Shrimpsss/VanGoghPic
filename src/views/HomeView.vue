@@ -1,12 +1,10 @@
 <template>
   <div class="home">
     <div class="mainBox">
-      <transition name="bounce">
-        <div class="subjectTxt" v-if="show" @click="show = !show">
-          <h1>Van GoghPic</h1>
-          <h1>Lightweight Social Wallpaper Site</h1>
-        </div>
-      </transition>
+      <div class="subjectTxt">
+        <h1>Van GoghPic</h1>
+        <h1>Lightweight Social Wallpaper Site</h1>
+      </div>
       <div class="Banner">
         <img src="../assets/vangogh1.jpg" alt="" />
       </div>
@@ -42,7 +40,7 @@ export default {
         FavCount: "339",
         picCount: "4239",
       },
-      show: true,
+      show: false,
     };
   },
   methods: {
@@ -51,16 +49,18 @@ export default {
       this.counts.UserCount = res[0];
       this.counts.FavCount = res[1];
       this.counts.picCount = res[2];
-      // for (let index = 0; index < res.length; index++) {
-      //   console.log(this.counts[index] = res[index]);
-      //   this.counts[index] = res[index]
-      // }
-      // res.map((item, index) => {
-      //   console.log(this.counts[index]);
+      // res.map((item, index, arr) => {
+      //   console.log(item);
+      //   console.log(this);
+      // }, this.counts);
+      // let username = this.$cookies.get("username");
+      // if (!username) return;
 
-      //   // this.counts.UserCount = index === 0 ? item : this.counts.UserCount;
-      //   // this.counts.FavCount = index === 1 ? item : this.counts.FavCount;
-      //   // this.counts.picCount =  index === 2 ? item : this.counts.picCount;
+      // this.show = true;
+      // let hone = document.querySelectorAll(".subjectTxt h1");
+      // hone.forEach((item, index, arr) => {
+      //   arr[0].innerHTML = username;
+      //   arr[1].innerHTML = "下午好<br/>";
       // });
     },
   },

@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     async getAlbums() {
-      if (this.token == null) {
+      if (!this.token) {
         this.$message.error("请先登录 ( •̀ ω •́ )y ");
         return;
       }

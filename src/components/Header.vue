@@ -24,8 +24,13 @@
       <!-- <p v-for="item, index in typeList" :key="index" :class="item.icon" @click="$router.push(item.url)"> 
         <span>{{item.text}}</span>
       </p>       -->
-      <p v-for="item, index in typeList" :key="index" :class="[item.text === activeText ? item.icon + ' active' : item.icon]" @click="tabItem(item.text,item.url)"> 
-        <span>{{item.text}}</span>
+      <p
+        v-for="(item, index) in typeList"
+        :key="index"
+        :class="[item.text === activeText ? item.icon + ' active' : item.icon]"
+        @click="tabItem(item.text, item.url)"
+      >
+        <span>{{ item.text }}</span>
       </p>
     </div>
     <div class="demo-type">
@@ -50,10 +55,10 @@ export default {
       showText: false,
       activeText: "主页",
       typeList: [
-        {icon: "el-icon-s-home", text: "主页", url: "/"},
-        {icon: "el-icon-menu", text: "类型", url: "/pic"},
-        {icon: "el-icon-s-management", text: "画册", url: "/album"},
-      ]
+        { icon: "el-icon-s-home", text: "主页", url: "/" },
+        { icon: "el-icon-menu", text: "类型", url: "/pic" },
+        { icon: "el-icon-s-management", text: "画册", url: "/album" },
+      ],
     };
   },
   methods: {
@@ -67,15 +72,15 @@ export default {
       }
     },
     tabItem(text, url) {
-      this.activeText= text;
+      this.activeText = text;
       this.$router.push(url);
     },
-
   },
   created() {
     // 页面一创建，就去cookie中取值
     this.username = this.$cookies.get("username");
     this.token = this.$cookies.get("token");
+    this.tabItem();
   },
 };
 </script>
@@ -105,7 +110,7 @@ ul {
   right: 0px;
   bottom: 0px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background-color: rgba(255, 255, 255, 0.083);
   padding: 5px 0px;
   height: 60px;
@@ -205,10 +210,9 @@ ul {
   margin-left: 20px;
   width: 70%;
   /deep/ .el-input__inner {
-  background: transparent;
-  border-radius: 20px;
-  border: 2px solid whitesmoke;
+    background: transparent;
+    border-radius: 20px;
+    border: 2px solid whitesmoke;
+  }
 }
-}
-
 </style>

@@ -206,6 +206,7 @@ export default {
       // 登录注册共用
       token: "",
       username: "",
+      user_id: "",
       password: "",
       author_img: "",
       Infoclass: false, // 登录注册框切换
@@ -289,8 +290,9 @@ export default {
       this.error_pwd = false;
     },
     async imgUpdata() {
-      if (this.username) {
-        const { data: res } = await getUserDate(this.username);
+      if (this.user_id) {
+        const { data: res } = await getUserDate(this.user_id);
+        console.log(res);
         this.author_img = res.author_img;
       }
     },
@@ -644,6 +646,7 @@ export default {
       this.$cookies.set("username", t.username);
       this.$cookies.set("user_id", t.id);
       this.username = t.username;
+      this.user_id = t.id;
       this.token = t.token;
     },
   },
@@ -897,13 +900,14 @@ button:active {
 .Edialog {
   padding: 0;
 }
-/deep/ .el-input__inner{
+/deep/ .el-input__inner {
   background: #fff;
 }
 
-#sign-up, #sign-in{
+#sign-up,
+#sign-in {
   border: 2px solid rgb(226, 226, 226);
-  cursor:pointer;
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.3);
 }
 </style>

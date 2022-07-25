@@ -109,6 +109,8 @@ export default {
           "评论字数不符合规范！ 最少输入10个字,最多输入100个字"
         );
         return;
+      } else if (!this.user_id) {
+        this.$message.error("请登录后再发表言论~");
       }
       console.log(this.album_id);
       await setComment({

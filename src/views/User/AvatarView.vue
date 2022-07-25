@@ -49,7 +49,7 @@
             :src="item.cover_img"
             alt=""
           />
-          <h3>{{item.title}}</h3>
+          <h3>{{ item.title }}</h3>
         </li>
       </div>
     </div>
@@ -66,7 +66,7 @@ export default {
     return {
       listdata: {}, // 用户数据
       albumList: [], // 画册数据
-      id: this.$route.query.name,
+      id: this.$route.params.id,
       // id: this.$route.params.id,
     };
   },
@@ -153,7 +153,7 @@ li {
   }
   .albumBox {
     width: 55%;
-    background: #000;
+    background: #393a40;
     border-radius: 15px;
     position: relative;
     display: flex;
@@ -166,8 +166,8 @@ li {
     }
     li {
       .likebox {
-        width: 200px;
-        height: 200px;
+        width: 180px;
+        height: 150px;
         margin-right: 10px;
         border: 2px solid #fff;
         cursor: pointer;
@@ -217,8 +217,8 @@ li {
       }
     }
     .authorimg {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
     }
     .authorBox {
       position: relative;
